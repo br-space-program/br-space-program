@@ -3,8 +3,6 @@
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
 
-#include "key_positions_structure.hpp"
-
 // This definitions allow to use the structures: mesh, mesh_drawable, etc. without mentionning explicitly cgp::
 using cgp::mesh;
 using cgp::mesh_drawable;
@@ -12,11 +10,26 @@ using cgp::numarray;
 using cgp::timer_basic;
 using cgp::vec3;
 
-// Variables associated to the GUI
+// Variables associated to the GUI (buttons, etc)
 struct gui_parameters
 {
-	bool display_frame = true;
+	bool display_frame = false;
 	bool display_wireframe = false;
+
+	// vec3 light_color[] = [ {1, 1, 1}, {0.4, 0.6, 0.8}, {1, 1, 0.2} ];
+	// vec3 light_position[] = [ {-2, 2, 0.8}, {1, -3, 0.2}, {-2, 1, 1} ];
+	vec3 light_color = {1, 1, 1};
+	vec3 light_position = {-2, -2, 0.8};
+
+	float ambiant = 0.3f;
+	float diffus = 0.8f;
+	float speculaire = 0.5f;
+	float exp_spec = 100.0f;
+
+	vec3 fog_color = {0.8, 0.8, 0.8};
+	float fog_dist_max = 15.0f;
+
+	float mitigation_dist_max = 4.0f;
 };
 
 // The structure of the custom scene
@@ -39,12 +52,14 @@ struct scene_structure : cgp::scene_inputs_generic
 	// Elements and shapes of the scene
 	// ****************************** //
 
-	cgp::mesh_drawable terrain;
-	cgp::mesh_drawable tree;
+	timer_basic timer;
+	mesh_drawable ground;
+	mesh_drawable cube;
 
-	cgp::timer_interval timer;
+	mesh_drawable sphere;
+	mesh_drawable camel;
 
-	keyframe_structure keyframe;
+	mesh_drawable sphere_light;
 
 	// ****************************** //
 	// Functions
