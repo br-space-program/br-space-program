@@ -32,10 +32,6 @@ uniform float exp_spec;
 // uniform vec3 light_color;
 // uniform vec3 light_position;
 
-uniform float fog_dist_max;
-uniform vec3 fog_color;
-
-uniform float mitigation_dist_max;
 
 const int nbr_lights = 3;
 vec3 light_colors[nbr_lights] = vec3[](vec3(0.3, 1, 0.1), vec3(0.4, 0.6, 0.8), vec3(1, 0.3, 0.2));
@@ -78,24 +74,11 @@ void main()
         vec3 color_neutral = diffus_color * material.color * light_color
                                 + spec_color * light_color;
 
-        // == Mitigation ==
-        float d_l = length(light_position - fragment.position);
-        float alpha_l = min(d_l/mitigation_dist_max, 1);
 
-        vec3 color_mitigated = (1 - alpha_l) * color_neutral;
-
-        final_color += color_mitigated;
+        final_color += color_neutral;
 
     }
 
-    // == Fog ==
-    float d = length(camera_pos - fragment.position);
-    float alpha_f = min(d/fog_dist_max, 1);
-    vec3 color_with_fog = (1 - alpha_f) * final_color
-                                + alpha_f * fog_color;
-
-
-
-	FragColor = vec4(color_with_fog, 1.0);
+	FragColor = vec4(final_color, 1.0);
 
 }

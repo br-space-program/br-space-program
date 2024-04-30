@@ -25,11 +25,6 @@ struct gui_parameters
 	float diffus = 0.8f;
 	float speculaire = 0.5f;
 	float exp_spec = 100.0f;
-
-	vec3 fog_color = {0.8, 0.8, 0.8};
-	float fog_dist_max = 15.0f;
-
-	float mitigation_dist_max = 4.0f;
 };
 
 // The structure of the custom scene

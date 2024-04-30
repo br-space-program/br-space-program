@@ -90,11 +90,6 @@ void scene_structure::display_frame()
 	// environment.uniform_generic.uniform_vec3["light_color"] = gui.light_color;
 	// environment.uniform_generic.uniform_vec3["light_position"] = gui.light_position;
 
-	environment.uniform_generic.uniform_float["fog_dist_max"] = gui.fog_dist_max;
-	environment.uniform_generic.uniform_vec3["fog_color"] = gui.fog_color;
-
-	environment.uniform_generic.uniform_float["mitigation_dist_max"] = gui.mitigation_dist_max;
-
 	sphere_light.model.translation = gui.light_position;
 	sphere_light.material.color = gui.light_color * 0.8f;
 	sphere_light.material.phong.ambient = 1;
@@ -141,11 +136,6 @@ void scene_structure::display_gui()
 	ImGui::SliderFloat("Diffus", &gui.diffus, 0.0f, 1.0f);
 	ImGui::SliderFloat("Spéculaire", &gui.speculaire, 0.0f, 1.0f);
 	ImGui::SliderFloat("Exposant Spéculaire", &gui.exp_spec, 0.0f, 256.0f);
-
-	ImGui::ColorEdit3("Fog color", &gui.fog_color[0]);
-	ImGui::SliderFloat("Fog distance", &gui.fog_dist_max, 0.0f, 40.0f);
-
-	ImGui::SliderFloat("Mitigation distance", &gui.mitigation_dist_max, 0.0f, 40.0f);
 }
 
 void scene_structure::mouse_move_event()
