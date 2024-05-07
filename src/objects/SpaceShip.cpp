@@ -5,7 +5,6 @@ using cgp::mesh_drawable;
 
 // Difference between the position of the center of rotation of camera and the
 // spaceship
-vec3 TARGET_DIFFERENCE = {0, 0.2, 0};
 double SPEED = 0.1;
 
 SpaceShip::SpaceShip(scene_structure* _scene) {
@@ -18,7 +17,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
   scene->camera_control.look_at(
       position +
           vec3({0, -1, 0.4}) /* position of the camera in the 3D scene */,
-      position + TARGET_DIFFERENCE /* targeted point in 3D scene */,
+      position /* targeted point in 3D scene */,
       {0, 0, 1} /* direction of the "up" vector */);
 
   // Load the spaceship
@@ -54,7 +53,7 @@ void SpaceShip::update() {
       rotation_transform::from_axis_angle({0, 1, 0}, -rotation_z);
 
   scene->camera_control.camera_model.center_of_rotation =
-      position + TARGET_DIFFERENCE;
+      position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
 }
 
 void SpaceShip::render() {
@@ -68,7 +67,6 @@ void SpaceShip::render_debug() {
 }
 
 void SpaceShip::action_keyboard() {
-  std::cout << rotation_z << std::endl;
   vec3 right = {cos(rotation_z), sin(rotation_z), 0};
   vec3 front = {-sin(rotation_z), cos(rotation_z), 0};
 
