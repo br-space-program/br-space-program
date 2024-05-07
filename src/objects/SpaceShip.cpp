@@ -46,3 +46,25 @@ void SpaceShip::render_debug() {
   // Display the wireframe of the sphere
   draw_wireframe(cylinder, scene->environment);
 }
+
+void SpaceShip::action_keyboard() {
+  if (scene->inputs.keyboard.is_pressed('s')) {
+    position.x -= 0.1;
+  }
+  if (scene->inputs.keyboard.is_pressed('z')) {
+    position.x += 0.1f;
+  }
+  if (scene->inputs.keyboard.is_pressed('q')) {
+    position.y += 0.1;
+  }
+  if (scene->inputs.keyboard.is_pressed('d')) {
+    position.y -= 0.1;
+  }
+  if (scene->inputs.keyboard.shift) {
+    position.z += 0.1;
+  }
+  if (scene->inputs.keyboard.ctrl) {
+    position.z -= 0.1;
+  }
+  cylinder.model.translation = position;
+}

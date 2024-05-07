@@ -1,5 +1,7 @@
 #pragma once
 
+class SpaceShip;
+
 #include "../scene.hpp"
 #include "Object.hpp"
 #include "cgp/cgp.hpp"
@@ -18,4 +20,6 @@ class SpaceShip : public Object {
   void render() override;
   void render_debug() override;
   ~SpaceShip() override = default;
+
+  void action_keyboard();
 };

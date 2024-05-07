@@ -1,9 +1,12 @@
 #pragma once
 
+struct scene_structure;
+
 #include <vector>
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
 #include "objects/Object.hpp"
+#include "objects/SpaceShip.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
 // without mentionning explicitly cgp::
@@ -59,6 +62,7 @@ struct scene_structure : cgp::scene_inputs_generic {
   std::vector<std::unique_ptr<Object>> objects;
 
   opengl_shader_structure shader_custom;
+  SpaceShip* space_ship;
 
   // ****************************** //
   // Functions

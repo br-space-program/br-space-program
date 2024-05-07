@@ -25,8 +25,9 @@ void scene_structure::initialize() {
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
   // Set up objects here
+  space_ship = new SpaceShip(this);
   objects.push_back(std::unique_ptr<Object>(new Sun(this)));
-  objects.push_back(std::unique_ptr<Object>(new SpaceShip(this)));
+  objects.push_back(std::unique_ptr<Object>(space_ship));
 }
 
 // This function is called permanently at every new frame
@@ -69,6 +70,7 @@ void scene_structure::mouse_click_event() {
   camera_control.action_mouse_click(environment.camera_view);
 }
 void scene_structure::keyboard_event() {
+  space_ship->action_keyboard();
   camera_control.action_keyboard(environment.camera_view);
 }
 void scene_structure::idle_frame() {
