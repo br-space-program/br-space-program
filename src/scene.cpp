@@ -1,5 +1,5 @@
 #include "scene.hpp"
-#include "objects/ExampleObject.hpp"
+#include "objects/SpaceShip.hpp"
 #include "objects/Sun.hpp"
 
 using namespace cgp;
@@ -29,8 +29,8 @@ void scene_structure::initialize() {
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
   // Set up objects here
-  // objects.push_back(std::unique_ptr<Object>(new ExampleObject(this)));
   objects.push_back(std::unique_ptr<Object>(new Sun(this)));
+  objects.push_back(std::unique_ptr<Object>(new SpaceShip(this)));
 }
 
 // This function is called permanently at every new frame
