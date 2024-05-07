@@ -15,6 +15,9 @@ ExampleObject::ExampleObject(scene_structure* _scene) {
       1, 2, 0};  // coordinates are offseted by {1,2,0} in the shader
   sphere.material.color = {
       1, 0.5f, 0.5f};  // sphere will appear red (r,g,b components in [0,1])
+
+  // Add shader
+  sphere.shader = scene->shader_custom;
 }
 
 void ExampleObject::update() {

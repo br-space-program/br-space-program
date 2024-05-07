@@ -79,5 +79,6 @@
     "cinttypes": "cpp"
   },
   "C_Cpp.clang_format_fallbackStyle": "Chromium",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "cSpell.words": ["phong"]
 }

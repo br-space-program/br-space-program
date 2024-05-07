@@ -1,5 +1,6 @@
 #include "scene.hpp"
 #include "objects/ExampleObject.hpp"
+#include "objects/Sun.hpp"
 
 using namespace cgp;
 
@@ -18,55 +19,17 @@ void scene_structure::initialize() {
 
   display_info();
 
-  // Create the global (x,y,z) frame
-  global_frame.initialize_data_on_gpu(mesh_primitive_frame());
-
-  // Create the shapes seen in the 3D scene
-  // ********************************************** //
-  cube.initialize_data_on_gpu(
-      mesh_primitive_cube(/*center*/ {0, 0, 0}, /*edge length*/ 1.0f));
-  cube.material.color = {1, 1, 0};
-  cube.model.translation = {1, 1, 0};
-
-  // Same process for the ground which is a plane
-  //  A quadrangle is defined a plane with 4-extremal corners.
-  float L_ground = 20.0f;
-  float z_ground = -0.51f;
-  mesh ground_mesh = mesh_primitive_quadrangle(
-      {-L_ground, -L_ground, z_ground}, {L_ground, -L_ground, z_ground},
-      {L_ground, L_ground, z_ground}, {-L_ground, L_ground, z_ground});
-  ground.initialize_data_on_gpu(ground_mesh);
-  ground.material.color = {0.6, 0.6, 0.6};
-
-  // A Sphere
-
-  // Camel: mesh_load_file_obj: read external obj file
-  camel.initialize_data_on_gpu(
-      mesh_load_file_obj(project::path + "assets/camel.obj"));
-  camel.material.color = {0.8, 0.7, 0.3};
-  camel.model.scaling = 0.5f;
-  camel.model.translation = {-1, 1, 0.5f};
-
-  // Sphere used to display the position of a light
-  sphere_light.initialize_data_on_gpu(mesh_primitive_sphere(0.2f));
-
-  // Remove warnings for unset uniforms
-  cgp_warning::max_warning = 0;
-
   // Load the custom shader
   shader_custom.load(
       project::path + "shaders/shading_custom/shading_custom.vert.glsl",
       project::path + "shaders/shading_custom/shading_custom.frag.glsl");
 
-  // Affect the loaded shader to the mesh_drawable
-  camel.shader = shader_custom;
-  cube.shader = shader_custom;
-  // sphere.shader = shader_custom;
-  ground.shader = shader_custom;
+  // Create the global (x,y,z) frame
+  global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-  // TODO: Set up objects here
-
+  // Set up objects here
   objects.push_back(std::unique_ptr<Object>(new ExampleObject(this)));
+  // objects.push_back(std::unique_ptr<Object>(new Sun(this)));
 }
 
 // This function is called permanently at every new frame
@@ -77,46 +40,9 @@ void scene_structure::display_frame() {
   // Update time
   timer.update();
 
-  // Set additional uniform parameters to the shader
-  environment.uniform_generic.uniform_float["ambiant"] = gui.ambiant;
-  environment.uniform_generic.uniform_float["diffus"] = gui.diffus;
-  environment.uniform_generic.uniform_float["speculaire"] = gui.speculaire;
-  environment.uniform_generic.uniform_float["exp_spec"] = gui.exp_spec;
-
-  // environment.uniform_generic.uniform_vec3["light_color"] = gui.light_color;
-  // environment.uniform_generic.uniform_vec3["light_position"] =
-  // gui.light_position;
-
-  sphere_light.model.translation = gui.light_position;
-  sphere_light.material.color = gui.light_color * 0.8f;
-  sphere_light.material.phong.ambient = 1;
-  sphere_light.material.phong.diffuse = 0;
-  sphere_light.material.phong.specular = 0;
-
-  // Light position
-  // float omega = 2 * Pi / 5.0;
-  // gui.light_position[0] = 2.4 * cos(omega * timer.t);
-  // gui.light_position[1] = 2.4 * sin(omega * timer.t);
-
-  // draw(sphere_light, environment);
-
   // conditional display of the global frame (set via the GUI)
   if (gui.display_frame)
     draw(global_frame, environment);
-
-  // the general syntax to display a mesh is:
-  //   draw(mesh_drawableName, environment);
-  // Note: scene is used to set the uniform parameters associated to the camera,
-  // light, etc. to the shader
-  // draw(ground, environment);
-  // draw(cube, environment);
-  // draw(camel, environment);
-
-  if (gui.display_wireframe) {
-    draw_wireframe(ground, environment);
-    draw_wireframe(cube, environment);
-    draw_wireframe(camel, environment);
-  }
 
   for (auto& object : objects) {
     object->update();
@@ -136,14 +62,6 @@ void scene_structure::display_frame() {
 void scene_structure::display_gui() {
   ImGui::Checkbox("Frame", &gui.display_frame);
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
-
-  ImGui::ColorEdit3("Light color", &gui.light_color[0]);
-  ImGui::SliderFloat3("Light position", &gui.light_position[0], -3.0f, 3.0f);
-
-  ImGui::SliderFloat("Ambiant", &gui.ambiant, 0.0f, 1.0f);
-  ImGui::SliderFloat("Diffus", &gui.diffus, 0.0f, 1.0f);
-  ImGui::SliderFloat("Spéculaire", &gui.speculaire, 0.0f, 1.0f);
-  ImGui::SliderFloat("Exposant Spéculaire", &gui.exp_spec, 0.0f, 256.0f);
 }
 
 void scene_structure::mouse_move_event() {
@@ -168,6 +86,6 @@ void scene_structure::display_info() {
 
   std::cout << "\nSCENE INFO:" << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
-  std::cout << "Exercise on Shading on GPU." << std::endl;
+  std::cout << "Binet Réseau Space Program" << std::endl;
   std::cout << "-----------------------------------------------\n" << std::endl;
 }
