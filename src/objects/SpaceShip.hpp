@@ -10,6 +10,7 @@ class SpaceShip : public Object {
  private:
   scene_structure* scene;
   mesh_drawable cylinder;
+  vec3 position;
 
  public:
   SpaceShip(scene_structure* _scene);
