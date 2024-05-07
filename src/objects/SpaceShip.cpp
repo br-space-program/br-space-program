@@ -13,11 +13,16 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
       {10.5, 0, 0} /* targeted point in 3D scene */,
       {0, 0, 1} /* direction of the "up" vector */);
 
-  mesh cylinder_mesh = mesh_primitive_cylinder();
+  // Add obj, ntl and jpg
+  cylinder.initialize_data_on_gpu(
+      mesh_load_file_obj(project::path + "assets/spaceship.obj"));
 
-  cylinder.initialize_data_on_gpu(cylinder_mesh);
+  cylinder.texture.load_and_initialize_texture_2d_on_gpu(
+      project::path + "assets/spaceship.jpg", GL_CLAMP_TO_BORDER,
+      GL_CLAMP_TO_BORDER);
+
   cylinder.model.scaling =
-      1.0f;  // coordinates are multiplied by 0.2 in the shader
+      0.001f;  // coordinates are multiplied by 0.2 in the shader
   cylinder.model.translation =
       position;  // coordinates are offseted by {1,2,0} in the shader
 
@@ -26,7 +31,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
       rotation_transform::from_axis_angle({1, 0, 0}, 3.14f / 2) *
       rotation_transform::from_axis_angle({0, 1, 0}, 3.14f / 2);
 
-  cylinder.material.color = {0.62f, 0.27f, 0.07f};
+  // cylinder.material.color = {0.62f, 0.27f, 0.07f};
 
   // Add shader
   cylinder.shader = scene->shader_custom;
