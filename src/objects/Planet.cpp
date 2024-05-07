@@ -21,10 +21,6 @@ Planet::Planet(scene_structure* _scene) {
 
   for (int ku = 0; ku < Nu; ++ku) {
     for (int kv = 0; kv < Nv; ++kv) {
-      // Compute local parametric coordinates (u,v) \in [0,1]
-      const float u = ku / (Nu - 1.0f);
-      const float v = kv / (Nv - 1.0f);
-
       int const idx = ku * Nv + kv;
 
       // Compute the Perlin noise

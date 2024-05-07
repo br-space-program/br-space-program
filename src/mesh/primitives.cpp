@@ -32,9 +32,6 @@ mesh create_sphere_mesh(float R, vec3 center, int Nu, int Nv) {
       shape.connectivity.push_back({k00, k10, k01});
       shape.connectivity.push_back({k10, k11, k01});
     }
-
-    const int k0N = Nv - 1 + Nv * ku;
-    const int k1N = Nv - 1 + Nv * (ku + 1);
   }
 
   shape.fill_empty_field();
