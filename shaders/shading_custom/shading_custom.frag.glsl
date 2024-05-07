@@ -31,9 +31,9 @@ struct material_structure
 };
 uniform material_structure material;
 
-const int nbr_lights = 3;
-vec3 light_colors[nbr_lights] = vec3[](vec3(1, 1, 1), vec3(0.4, 0.6, 0.8), vec3(1, 0.3, 0.2));
-vec3 light_positions[nbr_lights] = vec3[](vec3(-2, 2, 0.3), vec3(1, -2, 0.2), vec3(-2, 1, 1));
+const int nbr_lights = 1;
+vec3 light_colors[nbr_lights] = vec3[](vec3(1, 1, 1));
+vec3 light_positions[nbr_lights] = vec3[](vec3(0, 0, 0));
 
 vec3 get_camera_pos() {
     mat3 O = transpose(mat3(view)); // get the orientation matrix
