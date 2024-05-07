@@ -6,7 +6,7 @@ struct scene_structure;
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
 #include "objects/Object.hpp"
-#include "objects/SpaceShip.hpp"
+#include "objects/space_ship/SpaceShip.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
 // without mentionning explicitly cgp::

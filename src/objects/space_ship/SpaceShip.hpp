@@ -2,8 +2,8 @@
 
 class SpaceShip;
 
-#include "../scene.hpp"
-#include "Object.hpp"
+#include "../../scene.hpp"
+#include "../Object.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;

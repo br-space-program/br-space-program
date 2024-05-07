@@ -1,6 +1,6 @@
 #include "scene.hpp"
-#include "objects/SpaceShip.hpp"
 #include "objects/Sun.hpp"
+#include "objects/space_ship/SpaceShip.hpp"
 
 using namespace cgp;
 
