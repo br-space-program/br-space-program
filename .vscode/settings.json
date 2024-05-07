@@ -52,5 +52,7 @@
     "streambuf": "cpp",
     "thread": "cpp",
     "typeinfo": "cpp"
-  }
+  },
+  "C_Cpp.clang_format_fallbackStyle": "Chromium",
+  "editor.formatOnSave": true
 }
