@@ -1,7 +1,9 @@
 #pragma once
 
+#include <vector>
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
+#include "objects/Object.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
 // without mentionning explicitly cgp::
@@ -50,10 +52,11 @@ struct scene_structure : cgp::scene_inputs_generic {
   mesh_drawable ground;
   mesh_drawable cube;
 
-  mesh_drawable sphere;
   mesh_drawable camel;
 
   mesh_drawable sphere_light;
+
+  std::vector<std::unique_ptr<Object>> objects;
 
   // ****************************** //
   // Functions
@@ -73,3 +76,5 @@ struct scene_structure : cgp::scene_inputs_generic {
 
   void display_info();
 };
+
+typedef struct scene_structure scene_structure;

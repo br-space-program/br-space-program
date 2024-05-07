@@ -1,4 +1,5 @@
 #include "scene.hpp"
+#include "objects/ExampleObject.hpp"
 
 using namespace cgp;
 
@@ -38,14 +39,6 @@ void scene_structure::initialize() {
   ground.material.color = {0.6, 0.6, 0.6};
 
   // A Sphere
-  mesh sphere_mesh = mesh_primitive_sphere();
-  sphere.initialize_data_on_gpu(sphere_mesh);
-  sphere.model.scaling =
-      100.0f;  // coordinates are multiplied by 0.2 in the shader
-  sphere.model.translation = {
-      1, 100, 0};  // coordinates are offseted by {1,2,0} in the shader
-  sphere.material.color = {
-      1, 0.5f, 0.5f};  // sphere will appear red (r,g,b components in [0,1])
 
   // Camel: mesh_load_file_obj: read external obj file
   camel.initialize_data_on_gpu(
@@ -69,8 +62,12 @@ void scene_structure::initialize() {
   // Affect the loaded shader to the mesh_drawable
   camel.shader = shader_custom;
   cube.shader = shader_custom;
-  sphere.shader = shader_custom;
+  // sphere.shader = shader_custom;
   ground.shader = shader_custom;
+
+  // TODO: Set up objects here
+
+  objects.push_back(std::unique_ptr<Object>(new ExampleObject(this)));
 }
 
 // This function is called permanently at every new frame
@@ -112,16 +109,28 @@ void scene_structure::display_frame() {
   //   draw(mesh_drawableName, environment);
   // Note: scene is used to set the uniform parameters associated to the camera,
   // light, etc. to the shader
-  draw(ground, environment);
-  draw(cube, environment);
-  draw(sphere, environment);
-  draw(camel, environment);
+  // draw(ground, environment);
+  // draw(cube, environment);
+  // draw(camel, environment);
 
   if (gui.display_wireframe) {
     draw_wireframe(ground, environment);
-    draw_wireframe(sphere, environment);
     draw_wireframe(cube, environment);
     draw_wireframe(camel, environment);
+  }
+
+  for (auto& object : objects) {
+    object->update();
+  }
+
+  for (auto& object : objects) {
+    object->render();
+  }
+
+  if (gui.display_wireframe) {
+    for (auto& object : objects) {
+      object->render_debug();
+    }
   }
 }
 
