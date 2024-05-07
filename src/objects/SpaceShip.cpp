@@ -6,10 +6,11 @@ using cgp::mesh_drawable;
 SpaceShip::SpaceShip(scene_structure* _scene) {
   scene = _scene;
   position = {10, 0, 0};
+  speed = {0, 0, 0};
 
   scene->camera_control.look_at(
-      {10, -2, 0} /* position of the camera in the 3D scene */,
-      {10, -0.5, 0} /* targeted point in 3D scene */,
+      {8, 0, 0} /* position of the camera in the 3D scene */,
+      {10.5, 0, 0} /* targeted point in 3D scene */,
       {0, 0, 1} /* direction of the "up" vector */);
 
   mesh cylinder_mesh = mesh_primitive_cylinder();
@@ -22,11 +23,10 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
 
   // Make cylinder horizontal
   cylinder.model.rotation =
-      rotation_transform::from_axis_angle({1, 0, 0}, 3.14f / 2);
+      rotation_transform::from_axis_angle({1, 0, 0}, 3.14f / 2) *
+      rotation_transform::from_axis_angle({0, 1, 0}, 3.14f / 2);
 
-  cylinder.material.color = {
-      0.62f, 0.27f,
-      0.07f};  // sphere will appear red (r,g,b components in [0,1])
+  cylinder.material.color = {0.62f, 0.27f, 0.07f};
 
   // Add shader
   cylinder.shader = scene->shader_custom;
@@ -34,7 +34,11 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
 
 void SpaceShip::update() {
   // Update the position of the sphere
-  // sphere.model.translation = {1, 2, 0};
+  double dt = 1.0 / 60.0;
+  position += speed * dt;
+  cylinder.model.translation = position;
+
+  scene->camera_control.camera_model.center_of_rotation = position;
 }
 
 void SpaceShip::render() {
@@ -49,22 +53,21 @@ void SpaceShip::render_debug() {
 
 void SpaceShip::action_keyboard() {
   if (scene->inputs.keyboard.is_pressed('s')) {
-    position.x -= 0.1;
+    speed.x -= 0.1;
   }
   if (scene->inputs.keyboard.is_pressed('z')) {
-    position.x += 0.1f;
+    speed.x += 0.1f;
   }
   if (scene->inputs.keyboard.is_pressed('q')) {
-    position.y += 0.1;
+    speed.y += 0.1;
   }
   if (scene->inputs.keyboard.is_pressed('d')) {
-    position.y -= 0.1;
+    speed.y -= 0.1;
   }
   if (scene->inputs.keyboard.shift) {
-    position.z += 0.1;
+    speed.z += 0.1;
   }
   if (scene->inputs.keyboard.ctrl) {
-    position.z -= 0.1;
+    speed.z -= 0.1;
   }
-  cylinder.model.translation = position;
 }

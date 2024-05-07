@@ -13,6 +13,7 @@ class SpaceShip : public Object {
   scene_structure* scene;
   mesh_drawable cylinder;
   vec3 position;
+  vec3 speed;
 
  public:
   SpaceShip(scene_structure* _scene);
