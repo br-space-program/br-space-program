@@ -17,9 +17,17 @@ layout(location=0) out vec4 FragColor;
 // View matrix
 uniform mat4 view;
 
+struct phong_parameters {
+    float ambient;
+    float diffuse;
+    float specular;
+    float specular_exponent;
+};
+
 struct material_structure
 {
 	vec3 color;  // Uniform color of the object
+    phong_parameters phong; // Phong parameters
 };
 uniform material_structure material;
 
@@ -34,7 +42,7 @@ uniform float exp_spec;
 
 
 const int nbr_lights = 3;
-vec3 light_colors[nbr_lights] = vec3[](vec3(0.3, 1, 0.1), vec3(0.4, 0.6, 0.8), vec3(1, 0.3, 0.2));
+vec3 light_colors[nbr_lights] = vec3[](vec3(1, 1, 1), vec3(0.4, 0.6, 0.8), vec3(1, 0.3, 0.2));
 vec3 light_positions[nbr_lights] = vec3[](vec3(-2, 2, 0.3), vec3(1, -2, 0.2), vec3(-2, 1, 1));
 
 vec3 get_camera_pos() {
@@ -59,16 +67,16 @@ void main()
 
         vec3 to_light = normalize(light_position - fragment.position);
 
-        float diffus_color = (ambiant +
-                            diffus
+        float diffus_color = (material.phong.ambient +
+                            material.phong.diffuse
                             * max(dot(normalize(fragment.normal), to_light), 0));
 
         // == Reflexion ==
         vec3 object_pov = normalize(camera_pos - fragment.position);
         vec3 reflexion = normalize(reflect(-to_light, fragment.normal));
 
-        float spec_color = speculaire
-                            * pow(max(dot(object_pov, reflexion), 0), exp_spec);
+        float spec_color = material.phong.specular
+                            * pow(max(dot(object_pov, reflexion), 0), material.phong.specular_exponent);
 
         // Diffusion + Reflexion
         vec3 color_neutral = diffus_color * material.color * light_color

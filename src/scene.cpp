@@ -54,7 +54,6 @@ void scene_structure::initialize() {
   cgp_warning::max_warning = 0;
 
   // Load the custom shader
-  opengl_shader_structure shader_custom;
   shader_custom.load(
       project::path + "shaders/shading_custom/shading_custom.vert.glsl",
       project::path + "shaders/shading_custom/shading_custom.frag.glsl");

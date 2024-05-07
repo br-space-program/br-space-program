@@ -58,6 +58,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 
   std::vector<std::unique_ptr<Object>> objects;
 
+  opengl_shader_structure shader_custom;
+
   // ****************************** //
   // Functions
   // ****************************** //
