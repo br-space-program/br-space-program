@@ -3,17 +3,25 @@
 
 using cgp::mesh_drawable;
 
+// Difference between the position of the center of rotation of camera and the
+// spaceship
+vec3 TARGET_DIFFERENCE = {0, 0.2, 0};
+double SPEED = 0.1;
+
 SpaceShip::SpaceShip(scene_structure* _scene) {
   scene = _scene;
   position = {10, 0, 0};
   speed = {0, 0, 0};
+  rotation_z = 0;
+  speed_rotation_z = 0;
 
   scene->camera_control.look_at(
-      {8, 0, 0} /* position of the camera in the 3D scene */,
-      {10.5, 0, 0} /* targeted point in 3D scene */,
+      position +
+          vec3({0, -1, 0.4}) /* position of the camera in the 3D scene */,
+      position + TARGET_DIFFERENCE /* targeted point in 3D scene */,
       {0, 0, 1} /* direction of the "up" vector */);
 
-  // Add obj, ntl and jpg
+  // Load the spaceship
   cylinder.initialize_data_on_gpu(
       mesh_load_file_obj(project::path + "assets/spaceship.obj"));
 
@@ -28,10 +36,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
 
   // Make cylinder horizontal
   cylinder.model.rotation =
-      rotation_transform::from_axis_angle({1, 0, 0}, 3.14f / 2) *
-      rotation_transform::from_axis_angle({0, 1, 0}, 3.14f / 2);
-
-  // cylinder.material.color = {0.62f, 0.27f, 0.07f};
+      rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
 
   // Add shader
   cylinder.shader = scene->shader_custom;
@@ -41,9 +46,15 @@ void SpaceShip::update() {
   // Update the position of the sphere
   double dt = 1.0 / 60.0;
   position += speed * dt;
-  cylinder.model.translation = position;
+  rotation_z += speed_rotation_z * dt;
 
-  scene->camera_control.camera_model.center_of_rotation = position;
+  cylinder.model.translation = position;
+  cylinder.model.rotation =
+      rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2) *
+      rotation_transform::from_axis_angle({0, 1, 0}, -rotation_z);
+
+  scene->camera_control.camera_model.center_of_rotation =
+      position + TARGET_DIFFERENCE;
 }
 
 void SpaceShip::render() {
@@ -57,22 +68,33 @@ void SpaceShip::render_debug() {
 }
 
 void SpaceShip::action_keyboard() {
-  if (scene->inputs.keyboard.is_pressed('s')) {
-    speed.x -= 0.1;
-  }
+  std::cout << rotation_z << std::endl;
+  vec3 right = {cos(rotation_z), sin(rotation_z), 0};
+  vec3 front = {-sin(rotation_z), cos(rotation_z), 0};
+
   if (scene->inputs.keyboard.is_pressed('z')) {
-    speed.x += 0.1f;
+    speed += SPEED * front;
+  }
+  if (scene->inputs.keyboard.is_pressed('s')) {
+    speed -= SPEED * front;
   }
   if (scene->inputs.keyboard.is_pressed('q')) {
-    speed.y += 0.1;
+    speed -= SPEED * right;
   }
   if (scene->inputs.keyboard.is_pressed('d')) {
-    speed.y -= 0.1;
+    speed += SPEED * right;
   }
-  if (scene->inputs.keyboard.shift) {
-    speed.z += 0.1;
+  if (scene->inputs.keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)) {
+    speed.z += SPEED;
   }
-  if (scene->inputs.keyboard.ctrl) {
-    speed.z -= 0.1;
+  if (scene->inputs.keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)) {
+    speed.z -= SPEED;
+  }
+
+  if (scene->inputs.keyboard.is_pressed('a')) {
+    speed_rotation_z += SPEED;
+  }
+  if (scene->inputs.keyboard.is_pressed('e')) {
+    speed_rotation_z -= SPEED;
   }
 }

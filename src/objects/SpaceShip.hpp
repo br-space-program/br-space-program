@@ -14,6 +14,8 @@ class SpaceShip : public Object {
   mesh_drawable cylinder;
   vec3 position;
   vec3 speed;
+  double rotation_z;  // Around z axis
+  double speed_rotation_z;
 
  public:
   SpaceShip(scene_structure* _scene);
