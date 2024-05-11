@@ -42,8 +42,15 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
 
   SpaceShipFlame* ship_flame = new SpaceShipFlame(scene);
 
-  hierarchy.add(ship, "ship");
-  hierarchy.add(ship_flame->flame, "ship_flame", "ship");
+  hierarchy.add(mesh_drawable(), "ship_center");
+  hierarchy.add(ship, "ship", "ship_center");
+  hierarchy.add(ship_flame->flame, "ship_flame", "ship_center");
+
+  hierarchy["ship"].transform_local.translation = {0, -0.05, 0};
+  hierarchy["ship"].transform_local.rotation =
+      rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
+
+  hierarchy["ship_flame"].transform_local.translation = {0, -0.08, 0};
 }
 
 void SpaceShip::update() {
@@ -52,15 +59,12 @@ void SpaceShip::update() {
   position += speed * dt;
   rotation_z += speed_rotation_z * dt;
 
-  hierarchy["ship"].transform_local.translation = position;
-  hierarchy["ship"].transform_local.rotation =
-      rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2) *
-      rotation_transform::from_axis_angle({0, 1, 0}, -rotation_z);
+  hierarchy["ship_center"].transform_local.translation = position;
+  hierarchy["ship_center"].transform_local.rotation =
+      rotation_transform::from_axis_angle({0, 0, 1}, rotation_z);
 
   scene->camera_control.camera_model.center_of_rotation =
       position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
-
-  hierarchy["ship_flame"].transform_local.translation = {0, 0, 2};
 
   hierarchy.update_local_to_global_coordinates();
 }
