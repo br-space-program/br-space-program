@@ -1,5 +1,6 @@
 #include "SpaceShip.hpp"
 #include <cgp/cgp.hpp>
+#include "SpaceShipFlame.hpp"
 
 using cgp::mesh_drawable;
 
@@ -21,24 +22,28 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
       {0, 0, 1} /* direction of the "up" vector */);
 
   // Load the spaceship
-  cylinder.initialize_data_on_gpu(
+  ship.initialize_data_on_gpu(
       mesh_load_file_obj(project::path + "assets/spaceship.obj"));
 
-  cylinder.texture.load_and_initialize_texture_2d_on_gpu(
+  ship.texture.load_and_initialize_texture_2d_on_gpu(
       project::path + "assets/spaceship.jpg", GL_CLAMP_TO_BORDER,
       GL_CLAMP_TO_BORDER);
 
-  cylinder.model.scaling =
-      0.001f;  // coordinates are multiplied by 0.2 in the shader
-  cylinder.model.translation =
-      position;  // coordinates are offseted by {1,2,0} in the shader
+  ship.model.scaling = 0.001f;  // coordinates are multiplied by 0.2 in the
+                                // shader ship.model.translation =
+  // position;    // coordinates are offseted by {1,2,0} in the shader
 
   // Make cylinder horizontal
-  cylinder.model.rotation =
-      rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
+  // ship.model.rotation =
+  //    rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
 
   // Add shader
-  cylinder.shader = scene->shader_custom;
+  ship.shader = scene->shader_custom;
+
+  SpaceShipFlame* ship_flame = new SpaceShipFlame(scene);
+
+  hierarchy.add(ship, "ship");
+  hierarchy.add(ship_flame->flame, "ship_flame", "ship");
 }
 
 void SpaceShip::update() {
@@ -47,23 +52,27 @@ void SpaceShip::update() {
   position += speed * dt;
   rotation_z += speed_rotation_z * dt;
 
-  cylinder.model.translation = position;
-  cylinder.model.rotation =
+  hierarchy["ship"].transform_local.translation = position;
+  hierarchy["ship"].transform_local.rotation =
       rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2) *
       rotation_transform::from_axis_angle({0, 1, 0}, -rotation_z);
 
   scene->camera_control.camera_model.center_of_rotation =
       position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
+
+  hierarchy["ship_flame"].transform_local.translation = {0, 0, 2};
+
+  hierarchy.update_local_to_global_coordinates();
 }
 
 void SpaceShip::render() {
   // Display the sphere
-  draw(cylinder, scene->environment);
+  draw(hierarchy, scene->environment);
 }
 
 void SpaceShip::render_debug() {
   // Display the wireframe of the sphere
-  draw_wireframe(cylinder, scene->environment);
+  draw_wireframe(hierarchy, scene->environment);
 }
 
 void SpaceShip::action_keyboard() {

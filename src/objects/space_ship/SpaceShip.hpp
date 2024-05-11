@@ -11,11 +11,13 @@ using cgp::mesh_drawable;
 class SpaceShip : public Object {
  private:
   scene_structure* scene;
-  mesh_drawable cylinder;
+  mesh_drawable ship;
   vec3 position;
   vec3 speed;
   double rotation_z;  // Around z axis
   double speed_rotation_z;
+
+  cgp::hierarchy_mesh_drawable hierarchy;
 
  public:
   SpaceShip(scene_structure* _scene);

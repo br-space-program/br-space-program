@@ -8,17 +8,14 @@ class SpaceShipFlame;
 
 using cgp::mesh_drawable;
 
-class SpaceShipFlame : public Object {
+class SpaceShipFlame {
  private:
   scene_structure* scene;
-  mesh_drawable sphere;
 
  public:
+  mesh_drawable flame;
   SpaceShipFlame(scene_structure* _scene);
-  void update() override;
-  void render() override;
-  void render_debug() override;
-  ~SpaceShipFlame() override = default;
+  ~SpaceShipFlame() = default;
 
   void action_keyboard();
 };

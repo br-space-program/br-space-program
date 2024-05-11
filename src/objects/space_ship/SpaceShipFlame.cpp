@@ -7,31 +7,20 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene) {
   scene = _scene;
 
   // Load the SpaceShipFlame
-  mesh sphere_mesh = mesh_primitive_sphere();
+  mesh sphere_mesh = mesh_primitive_ellipsoid({0.21f, 0.1f, 0.1f});
 
-  sphere.initialize_data_on_gpu(sphere_mesh);
+  flame.initialize_data_on_gpu(sphere_mesh);
 
-  sphere.model.scaling =
-      0.1f;  // coordinates are multiplied by 0.2 in the shader
-  sphere.model.translation = {
-      0, 1, 0};  // coordinates are offseted by {1,2,0} in the shader
+  flame.model.scaling = 1.0f;  // coordinates are multiplied by 0.2 in the
+                               // shader flame.model.translation = {
+  //   0, 0, 2};  // coordinates are offseted by {1,2,0} in the shader
 
   // Make sphere horizontal
-  sphere.model.rotation =
-      rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
+  // flame.model.rotation =
+  //   rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
+
+  flame.material.color = {1, 1, 1};
 
   // Add shader
-  sphere.shader = scene->shader_custom;
-}
-
-void SpaceShipFlame::update() {}
-
-void SpaceShipFlame::render() {
-  // Display the sphere
-  draw(sphere, scene->environment);
-}
-
-void SpaceShipFlame::render_debug() {
-  // Display the wireframe of the sphere
-  draw_wireframe(sphere, scene->environment);
+  flame.shader = scene->shader_custom;
 }
