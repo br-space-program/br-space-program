@@ -72,7 +72,6 @@ void main()
 	vec3 last_col = vec3(view*vec4(0.0, 0.0, 0.0, 1.0)); // get the last column
 	vec3 camera_position = -O*last_col;
 
-
 	// Renormalize normal
 	vec3 N = normalize(fragment.normal);
 

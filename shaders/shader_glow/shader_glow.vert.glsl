@@ -25,6 +25,7 @@ uniform mat4 projection; // Projection (perspective or orthogonal) matrix of the
 
 
 
+
 void main()
 {
 	// The position of the vertex in the world space
@@ -34,10 +35,24 @@ void main()
 	mat4 modelNormal = transpose(inverse(model));
 	vec4 normal = modelNormal * vec4(vertex_normal, 0.0);
 
+    vec4 offset = normal * 0.001f;
 	// The projected position of the vertex in the normalized device coordinates:
-	vec4 position_projected = projection * view * position;
+	vec4 position_projected = projection * view * (position);
 
-    float glow_transparency = dot(normalize(normal), normalize(position_projected));
+	// The glow should be more prominent the closer to the object you are and get fainter and fainter the further away you are.
+	// Instead of using proximity to the object, we can use the angle between the viewing vector and the normal of the triangle that is being rendered.
+	// This way the glow becomes fainter when the surface of the object is less aimed at the viewer.
+
+	// This effect can easily be calculated by using the dot-product of the normalized viewing vector and triangle normal
+	// (note that Face Culling is enabled in this situation, which means that triangles that are pointing away from the camera are not rendered).
+		// Compute the position of the center of the camera
+	mat3 O = transpose(mat3(view));                   // get the orientation matrix
+	vec3 last_col = vec3(view*vec4(0.0, 0.0, 0.0, 1.0)); // get the last column
+	vec3 camera_position = -O*last_col;
+
+	vec3 camera_to_vertex = camera_position - position.xyz;
+
+    float glow_transparency = dot(normalize(normal.xyz), normalize(camera_to_vertex));
 
 	// Fill the parameters sent to the fragment shader
 	fragment.position = position.xyz;
@@ -45,7 +60,6 @@ void main()
 	fragment.color = vertex_color;
 	fragment.uv = vertex_uv;
     fragment.glow_transparency = glow_transparency;
-
 
 
 	// gl_Position is a built-in variable which is the expected output of the vertex shader
