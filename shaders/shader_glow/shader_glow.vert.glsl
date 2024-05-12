@@ -35,17 +35,11 @@ void main()
 	mat4 modelNormal = transpose(inverse(model));
 	vec4 normal = modelNormal * vec4(vertex_normal, 0.0);
 
-    vec4 offset = normal * 0.001f;
+    // vec4 offset = normal * 1.0f;
 	// The projected position of the vertex in the normalized device coordinates:
-	vec4 position_projected = projection * view * (position);
+	vec4 position_projected = projection * view * position; // (position + offset)
 
-	// The glow should be more prominent the closer to the object you are and get fainter and fainter the further away you are.
-	// Instead of using proximity to the object, we can use the angle between the viewing vector and the normal of the triangle that is being rendered.
-	// This way the glow becomes fainter when the surface of the object is less aimed at the viewer.
-
-	// This effect can easily be calculated by using the dot-product of the normalized viewing vector and triangle normal
-	// (note that Face Culling is enabled in this situation, which means that triangles that are pointing away from the camera are not rendered).
-		// Compute the position of the center of the camera
+	// Compute the position of the center of the camera
 	mat3 O = transpose(mat3(view));                   // get the orientation matrix
 	vec3 last_col = vec3(view*vec4(0.0, 0.0, 0.0, 1.0)); // get the last column
 	vec3 camera_position = -O*last_col;

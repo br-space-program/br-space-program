@@ -10,7 +10,7 @@ double SPEED = 0.1;
 
 SpaceShip::SpaceShip(scene_structure* _scene) {
   scene = _scene;
-  position = {10, 0, 0};
+  position = {100, 0, 0};
   speed = {0, 0, 0};
   rotation_z = 0;
   speed_rotation_z = 0;

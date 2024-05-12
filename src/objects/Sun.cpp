@@ -23,20 +23,21 @@ Sun::Sun(scene_structure* _scene) {
   // Add shader
   sphere.shader = scene->shader_custom;
 
-  sphere.initialize_data_on_gpu(sphere_mesh);
-  sphere.model.scaling =
-      5.0f;  // coordinates are multiplied by 0.2 in the shader
-  sphere.model.translation = {0, 0, 0};
-  sphere.material.color = {
-      1, 0.87f, 0.48f};  // sphere will appear red (r,g,b components in [0,1])
+  atmosphere.initialize_data_on_gpu(sphere_mesh);
+  atmosphere.model.scaling =
+      20.0f;  // coordinates are multiplied by 0.2 in the shader
+  atmosphere.model.translation = {0, 0, 0};
+  atmosphere.material.color = {
+      1, 0.87f,
+      0.48f};  // atmosphere will appear red (r,g,b components in [0,1])
 
   // Make it a light source
-  sphere.material.phong.ambient = 1;
-  sphere.material.phong.diffuse = 0;
-  sphere.material.phong.specular = 0;
+  atmosphere.material.phong.ambient = 1;
+  atmosphere.material.phong.diffuse = 0;
+  atmosphere.material.phong.specular = 0;
 
   // Add shader
-  sphere.shader = scene->shader_custom;
+  atmosphere.shader = scene->shader_glow;
 }
 
 void Sun::update() {
@@ -46,6 +47,7 @@ void Sun::update() {
 void Sun::render() {
   // Display the sphere
   draw(sphere, scene->environment);
+  draw(atmosphere, scene->environment);
 }
 
 void Sun::render_debug() {
