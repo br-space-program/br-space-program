@@ -52,16 +52,12 @@ struct scene_structure : cgp::scene_inputs_generic {
   // ****************************** //
 
   timer_basic timer;
-  mesh_drawable ground;
-  mesh_drawable cube;
-
-  mesh_drawable camel;
-
-  mesh_drawable sphere_light;
 
   std::vector<std::unique_ptr<Object>> objects;
 
   opengl_shader_structure shader_custom;
+  opengl_shader_structure shader_glow;
+
   SpaceShip* space_ship;
 
   // ****************************** //

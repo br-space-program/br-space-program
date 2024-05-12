@@ -22,5 +22,5 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene) {
   flame.material.color = {1, 0.73, 0.08};
 
   // Add shader
-  flame.shader = scene->shader_custom;
+  flame.shader = scene->shader_glow;
 }
