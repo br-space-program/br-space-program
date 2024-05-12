@@ -22,6 +22,7 @@ class SpaceShipFlame {
                  cgp::hierarchy_mesh_drawable* _hierarchy,
                  std::string _name,
                  vec3 _position);
+  void update();
 
   ~SpaceShipFlame() = default;
 

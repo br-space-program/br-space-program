@@ -35,7 +35,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
   hierarchy.add(ship, "ship", "ship_center");
 
   ship_flame =
-      new SpaceShipFlame(scene, &hierarchy, "ship_flame", {0, -0.08, 0});
+      new SpaceShipFlame(scene, &hierarchy, "ship_flame", {0, -0.1, 0});
 
   hierarchy["ship"].transform_local.translation = {0, -0.05, 0};
   hierarchy["ship"].transform_local.rotation =
@@ -56,6 +56,8 @@ void SpaceShip::update() {
 
   scene->camera_control.camera_model.center_of_rotation =
       position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
+
+  ship_flame->update();
 
   hierarchy.update_local_to_global_coordinates();
 }
