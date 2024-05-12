@@ -6,11 +6,13 @@ using cgp::mesh_drawable;
 SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
                                cgp::hierarchy_mesh_drawable* _hierarchy,
                                std::string _name,
-                               vec3 _position) {
+                               double scale,
+                               vec3 position,
+                               vec3 rotation_axis,
+                               double rotation_angle) {
   scene = _scene;
   hierarchy = _hierarchy;
   name = _name;
-  position = _position;
 
   // Load the SpaceShipFlame
   // mesh sphere_mesh = mesh_primitive_ellipsoid({0.1f, 0.21f, 0.1f});
@@ -20,7 +22,7 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
 
   // flame.initialize_data_on_gpu(sphere_mesh);
 
-  flame.model.scaling = 0.02f;
+  flame.model.scaling = 0.02 * scale;
   flame.material.color = {1, 0.73, 0.08};
 
   // Make it a light source
@@ -32,9 +34,8 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
   flame.shader = scene->shader_custom;
 
   hierarchy->add(flame, name, "ship_center", position);
-
   (*hierarchy)[name].transform_local.rotation =
-      rotation_transform::from_axis_angle({0, 0, 1}, 3.14f);
+      rotation_transform::from_axis_angle(rotation_axis, rotation_angle);
   off();
 }
 

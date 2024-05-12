@@ -14,14 +14,16 @@ class SpaceShipFlame {
   scene_structure* scene;
   cgp::hierarchy_mesh_drawable* hierarchy;
   std::string name;
-  vec3 position;
 
  public:
   mesh_drawable flame;
   SpaceShipFlame(scene_structure* _scene,
                  cgp::hierarchy_mesh_drawable* _hierarchy,
                  std::string _name,
-                 vec3 _position);
+                 double scale,
+                 vec3 position,
+                 vec3 rotation_axis,
+                 double rotation_angle);
   void update();
 
   ~SpaceShipFlame() = default;

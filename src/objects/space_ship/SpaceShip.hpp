@@ -15,6 +15,13 @@ class SpaceShip : public Object {
   mesh_drawable ship;
 
   SpaceShipFlame* ship_flame;
+  SpaceShipFlame* ship_flame_front;
+  SpaceShipFlame* ship_flame_top;
+  SpaceShipFlame* ship_flame_bottom;
+  SpaceShipFlame* ship_flame_right_up;
+  SpaceShipFlame* ship_flame_right_down;
+  SpaceShipFlame* ship_flame_left_up;
+  SpaceShipFlame* ship_flame_left_down;
 
   vec3 position;
   vec3 speed;
