@@ -1,6 +1,5 @@
 #include "SpaceShip.hpp"
 #include <cgp/cgp.hpp>
-#include "SpaceShipFlame.hpp"
 
 using cgp::mesh_drawable;
 
@@ -29,28 +28,20 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
       project::path + "assets/spaceship.jpg", GL_CLAMP_TO_BORDER,
       GL_CLAMP_TO_BORDER);
 
-  ship.model.scaling = 0.001f;  // coordinates are multiplied by 0.2 in the
-                                // shader ship.model.translation =
-  // position;    // coordinates are offseted by {1,2,0} in the shader
-
-  // Make cylinder horizontal
-  // ship.model.rotation =
-  //    rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
-
-  // Add shader
+  ship.model.scaling = 0.001f;
   ship.shader = scene->shader_custom;
 
-  SpaceShipFlame* ship_flame = new SpaceShipFlame(scene);
-
-  hierarchy.add(mesh_drawable(), "ship_center");
+  hierarchy.add(mesh_drawable(), "ship_center");  // Empty point for the center
   hierarchy.add(ship, "ship", "ship_center");
-  hierarchy.add(ship_flame->flame, "ship_flame", "ship_center");
+
+  ship_flame =
+      new SpaceShipFlame(scene, &hierarchy, "ship_flame", {0, -0.08, 0});
 
   hierarchy["ship"].transform_local.translation = {0, -0.05, 0};
   hierarchy["ship"].transform_local.rotation =
       rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
 
-  hierarchy["ship_flame"].transform_local.translation = {0, -0.08, 0};
+  std::cout << hierarchy.hierarchy_display() << std::endl;
 }
 
 void SpaceShip::update() {
@@ -85,7 +76,11 @@ void SpaceShip::action_keyboard() {
 
   if (scene->inputs.keyboard.is_pressed('z')) {
     speed += SPEED * front;
+    ship_flame->on();
+  } else {
+    ship_flame->off();
   }
+
   if (scene->inputs.keyboard.is_pressed('s')) {
     speed -= SPEED * front;
   }

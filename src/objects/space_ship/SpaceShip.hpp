@@ -4,6 +4,7 @@ class SpaceShip;
 
 #include "../../scene.hpp"
 #include "../Object.hpp"
+#include "SpaceShipFlame.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;
@@ -12,6 +13,9 @@ class SpaceShip : public Object {
  private:
   scene_structure* scene;
   mesh_drawable ship;
+
+  SpaceShipFlame* ship_flame;
+
   vec3 position;
   vec3 speed;
   double rotation_z;  // Around z axis
