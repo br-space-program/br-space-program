@@ -48,12 +48,12 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
   // Add shader
   flame_small.shader = scene->shader_custom;
 
-  hierarchy->add(flame_small, name + "_small", name, {0, -0.02, 0});
+  hierarchy->add(flame_small, name + "_small", name, {0, -0.04, 0});
   (*hierarchy)[name + "_small"].transform_local.rotation =
       rotation_transform::from_axis_angle({0, 1, 0}, 3.14f / 2);
 
   // ==== Flare ====
-  flare.initialize_data_on_gpu(mesh_primitive_ellipsoid({0.1f, 0.21f, 0.1f}));
+  flare.initialize_data_on_gpu(mesh_primitive_ellipsoid({0.1f, 0.25f, 0.1f}));
 
   flare.model.scaling = 1.1 * scale;
   flare.material.color = {1, 0.73, 0.08};
@@ -87,12 +87,13 @@ void SpaceShipFlame::update() {
   // Update the position of the flame
 
   // (*hierarchy)[name].transform_local.translation = {0, offset, 0};
-  flame.model.scaling_xyz = {1 + 0.3 * flame_offset(scene->timer.t),
-                             1 + 0.8 * flame_offset(scene->timer.t + 11), 1};
+  (*hierarchy)[name].drawable.model.scaling_xyz = {
+      1 + 0.2 * flame_offset(scene->timer.t),
+      1 + 0.7 * flame_offset(scene->timer.t + 11), 1};
 
-  flame_small.model.scaling_xyz = {1 + 0.3 * flame_offset(scene->timer.t + 42),
-                                   1 + 0.8 * flame_offset(scene->timer.t + 64),
-                                   1};
+  (*hierarchy)[name + "_small"].drawable.model.scaling_xyz = {
+      1 + 0.1 * flame_offset(scene->timer.t + 42),
+      1 + 0.5 * flame_offset(scene->timer.t + 64), 1};
 }
 
 double flame_offset(double t) {

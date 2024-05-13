@@ -42,7 +42,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
 
   // ==== Setup Flames ====
   ship_flame = new SpaceShipFlame(scene, &hierarchy, "ship_flame", 1,
-                                  {0, -0.1, 0}, {1, 0, 0}, 3.14);
+                                  {0, -0.17, 0}, {1, 0, 0}, 3.14);
 
   ship_flame_front = new SpaceShipFlame(scene, &hierarchy, "ship_flame_front",
                                         0.5, {0, 0.4, 0}, {1, 0, 0}, 0);
@@ -55,7 +55,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
                          {0, 0.14, -0.115}, {1, 0, 0}, -3.14 / 2);
 
   ship_flame_right_up =
-      new SpaceShipFlame(scene, &hierarchy, "ship_flame_right_top", 0.5,
+      new SpaceShipFlame(scene, &hierarchy, "ship_flame_right_up", 0.5,
                          {0.09, 0.28, 0}, {0, 0, 1}, -3.14 / 2);
 
   ship_flame_right_down =
