@@ -84,6 +84,15 @@ void SpaceShip::update() {
   scene->camera_control.camera_model.center_of_rotation =
       position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
 
+  ship_flame->update();
+  ship_flame_front->update();
+  ship_flame_top->update();
+  ship_flame_bottom->update();
+  ship_flame_right_up->update();
+  ship_flame_right_down->update();
+  ship_flame_left_up->update();
+  ship_flame_left_down->update();
+
   hierarchy.update_local_to_global_coordinates();
 }
 

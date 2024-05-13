@@ -85,4 +85,17 @@ void SpaceShipFlame::off() {
 
 void SpaceShipFlame::update() {
   // Update the position of the flame
+
+  // (*hierarchy)[name].transform_local.translation = {0, offset, 0};
+  flame.model.scaling_xyz = {1 + 0.3 * flame_offset(scene->timer.t),
+                             1 + 0.8 * flame_offset(scene->timer.t + 11), 1};
+
+  flame_small.model.scaling_xyz = {1 + 0.3 * flame_offset(scene->timer.t + 42),
+                                   1 + 0.8 * flame_offset(scene->timer.t + 64),
+                                   1};
+}
+
+double flame_offset(double t) {
+  return 0.2 * (1 + std::sin(34 * t)) + 0.17 * (1 + std::sin(42 * t)) +
+         0.05 * (1 + std::sin(47 * t)) + 0.04 * (1 + std::sin(52 * t));
 }

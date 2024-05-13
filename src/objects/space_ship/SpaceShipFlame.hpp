@@ -34,3 +34,5 @@ class SpaceShipFlame {
   void on();
   void off();
 };
+
+double flame_offset(double t);
