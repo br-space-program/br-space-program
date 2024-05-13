@@ -18,10 +18,8 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
   flame.initialize_data_on_gpu(
       mesh_load_file_obj(project::path + "assets/flame.obj"));
 
-  // flame.initialize_data_on_gpu(sphere_mesh);
-
   flame.model.scaling = 0.02 * scale;
-  flame.material.color = {1, 0.73, 0.08};
+  flame.material.color = {0.96, 0.05, 0.04};  // {1, 0.73, 0.08};
 
   // Make it a light source
   flame.material.phong.ambient = 1;
@@ -35,7 +33,26 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
   (*hierarchy)[name].transform_local.rotation =
       rotation_transform::from_axis_angle(rotation_axis, rotation_angle);
 
-  // Flare
+  // ==== Flame small ====
+  flame_small.initialize_data_on_gpu(
+      mesh_load_file_obj(project::path + "assets/flame.obj"));
+
+  flame_small.model.scaling = 0.015 * scale;
+  flame_small.material.color = {1, 0.73, 0.08};
+
+  // Make it a light source
+  flame_small.material.phong.ambient = 1;
+  flame_small.material.phong.diffuse = 0;
+  flame_small.material.phong.specular = 0;
+
+  // Add shader
+  flame_small.shader = scene->shader_custom;
+
+  hierarchy->add(flame_small, name + "_small", name, {0, -0.02, 0});
+  (*hierarchy)[name + "_small"].transform_local.rotation =
+      rotation_transform::from_axis_angle({0, 1, 0}, 3.14f / 2);
+
+  // ==== Flare ====
   flare.initialize_data_on_gpu(mesh_primitive_ellipsoid({0.1f, 0.21f, 0.1f}));
 
   flare.model.scaling = 1.1 * scale;
@@ -57,11 +74,13 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
 void SpaceShipFlame::on() {
   (*hierarchy)[name].drawable = flame;
   (*hierarchy)[name + "_flare"].drawable = flare;
+  (*hierarchy)[name + "_small"].drawable = flame_small;
 }
 
 void SpaceShipFlame::off() {
   (*hierarchy)[name].drawable = mesh_drawable();
   (*hierarchy)[name + "_flare"].drawable = mesh_drawable();
+  (*hierarchy)[name + "_small"].drawable = mesh_drawable();
 }
 
 void SpaceShipFlame::update() {

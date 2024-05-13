@@ -17,6 +17,7 @@ class SpaceShipFlame {
 
   mesh_drawable flare;
   mesh_drawable flame;
+  mesh_drawable flame_small;
 
  public:
   SpaceShipFlame(scene_structure* _scene,
