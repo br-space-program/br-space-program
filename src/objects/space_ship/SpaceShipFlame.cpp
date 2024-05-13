@@ -72,15 +72,12 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
 }
 
 void SpaceShipFlame::on() {
-  std::cout << "ON  " << name << std::endl;
   (*hierarchy)[name].drawable = flame;
   (*hierarchy)[name + "_flare"].drawable = flare;
   (*hierarchy)[name + "_small"].drawable = flame_small;
 }
 
 void SpaceShipFlame::off() {
-  std::cout << "OFF " << name << std::endl;
-
   (*hierarchy)[name].drawable = mesh_drawable();
   (*hierarchy)[name + "_flare"].drawable = mesh_drawable();
   (*hierarchy)[name + "_small"].drawable = mesh_drawable();

@@ -41,9 +41,6 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
       rotation_transform::from_axis_angle({1, 0, 0}, -3.14f / 2);
 
   // ==== Setup Flames ====
-  ship_flame = new SpaceShipFlame(scene, &hierarchy, "ship_flame", 1,
-                                  {0, -0.17, 0}, {1, 0, 0}, 3.14);
-
   ship_flame_front = new SpaceShipFlame(scene, &hierarchy, "ship_flame_front",
                                         0.5, {0, 0.4, 0}, {1, 0, 0}, 0);
 
@@ -69,6 +66,9 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
   ship_flame_left_down =
       new SpaceShipFlame(scene, &hierarchy, "ship_flame_left_down", 0.5,
                          {-0.09, 0.05, 0}, {0, 0, 1}, 3.14 / 2);
+
+  ship_flame = new SpaceShipFlame(scene, &hierarchy, "ship_flame", 1,
+                                  {0, -0.17, 0}, {1, 0, 0}, 3.14);
 }
 
 void SpaceShip::update() {
