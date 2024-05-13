@@ -72,19 +72,22 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
 }
 
 void SpaceShipFlame::on() {
+  std::cout << "ON  " << name << std::endl;
   (*hierarchy)[name].drawable = flame;
   (*hierarchy)[name + "_flare"].drawable = flare;
   (*hierarchy)[name + "_small"].drawable = flame_small;
 }
 
 void SpaceShipFlame::off() {
+  std::cout << "OFF " << name << std::endl;
+
   (*hierarchy)[name].drawable = mesh_drawable();
   (*hierarchy)[name + "_flare"].drawable = mesh_drawable();
   (*hierarchy)[name + "_small"].drawable = mesh_drawable();
 }
 
 void SpaceShipFlame::update() {
-  // Update the position of the flame
+  // Update the position of the flame : animation
 
   // (*hierarchy)[name].transform_local.translation = {0, offset, 0};
   (*hierarchy)[name].drawable.model.scaling_xyz = {

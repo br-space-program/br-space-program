@@ -128,20 +128,12 @@ void SpaceShip::action_keyboard() {
   // Side
   if (scene->inputs.keyboard.is_pressed('q')) {
     speed -= SPEED * right;
-    ship_flame_left_up->on();
-    ship_flame_left_down->on();
   } else {
-    ship_flame_left_up->off();
-    ship_flame_left_down->off();
   }
 
   if (scene->inputs.keyboard.is_pressed('d')) {
     speed += SPEED * right;
-    ship_flame_right_up->on();
-    ship_flame_right_down->on();
   } else {
-    ship_flame_right_up->off();
-    ship_flame_right_down->off();
   }
 
   // Top
@@ -176,6 +168,37 @@ void SpaceShip::action_keyboard() {
     ship_flame_right_down->on();
   } else {
     ship_flame_left_up->off();
+    ship_flame_right_down->off();
+  }
+
+  // Flame for rotation and side movement
+  // (Defined here because else it would be turned off by the previous)
+
+  if (scene->inputs.keyboard.is_pressed('a') ||
+      scene->inputs.keyboard.is_pressed('q')) {
+    ship_flame_right_up->on();
+  } else {
+    ship_flame_right_up->off();
+  }
+
+  if (scene->inputs.keyboard.is_pressed('a') ||
+      scene->inputs.keyboard.is_pressed('d')) {
+    ship_flame_left_down->on();
+  } else {
+    ship_flame_left_down->off();
+  }
+
+  if (scene->inputs.keyboard.is_pressed('e') ||
+      scene->inputs.keyboard.is_pressed('d')) {
+    ship_flame_left_up->on();
+  } else {
+    ship_flame_left_up->off();
+  }
+
+  if (scene->inputs.keyboard.is_pressed('e') ||
+      scene->inputs.keyboard.is_pressed('q')) {
+    ship_flame_right_down->on();
+  } else {
     ship_flame_right_down->off();
   }
 }
