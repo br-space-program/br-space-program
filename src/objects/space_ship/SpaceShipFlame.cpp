@@ -15,8 +15,6 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
   name = _name;
 
   // Load the SpaceShipFlame
-  // mesh sphere_mesh = mesh_primitive_ellipsoid({0.1f, 0.21f, 0.1f});
-
   flame.initialize_data_on_gpu(
       mesh_load_file_obj(project::path + "assets/flame.obj"));
 
@@ -36,15 +34,34 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
   hierarchy->add(flame, name, "ship_center", position);
   (*hierarchy)[name].transform_local.rotation =
       rotation_transform::from_axis_angle(rotation_axis, rotation_angle);
+
+  // Flare
+  flare.initialize_data_on_gpu(mesh_primitive_ellipsoid({0.1f, 0.21f, 0.1f}));
+
+  flare.model.scaling = 1.1 * scale;
+  flare.material.color = {1, 0.73, 0.08};
+
+  // Make it a light source
+  flare.material.phong.ambient = 1;
+  flare.material.phong.diffuse = 0;
+  flare.material.phong.specular = 0;
+
+  // Add shader
+  flare.shader = scene->shader_glow;
+
+  hierarchy->add(flare, name + "_flare", name);
+
   off();
 }
 
 void SpaceShipFlame::on() {
   (*hierarchy)[name].drawable = flame;
+  (*hierarchy)[name + "_flare"].drawable = flare;
 }
 
 void SpaceShipFlame::off() {
   (*hierarchy)[name].drawable = mesh_drawable();
+  (*hierarchy)[name + "_flare"].drawable = mesh_drawable();
 }
 
 void SpaceShipFlame::update() {

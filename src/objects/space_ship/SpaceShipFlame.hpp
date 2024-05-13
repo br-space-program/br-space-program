@@ -15,8 +15,10 @@ class SpaceShipFlame {
   cgp::hierarchy_mesh_drawable* hierarchy;
   std::string name;
 
- public:
+  mesh_drawable flare;
   mesh_drawable flame;
+
+ public:
   SpaceShipFlame(scene_structure* _scene,
                  cgp::hierarchy_mesh_drawable* _hierarchy,
                  std::string _name,
