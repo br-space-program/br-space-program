@@ -4,9 +4,8 @@
 
 using cgp::mesh_drawable;
 
-Planet::Planet(scene_structure* _scene) {
-  scene = _scene;
-
+Planet::Planet(scene_structure* _scene, CelestialBody& _anchor, vec3 _position)
+    : KeplerianBody(_anchor, _position, 0), scene(_scene) {
   int Nu = 100;
   int Nv = 70;
 
@@ -52,7 +51,8 @@ Planet::Planet(scene_structure* _scene) {
 }
 
 void Planet::update() {
-  sphere.model.translation = {0, 0, 0};
+  KeplerianBody::update();
+  sphere.model.translation = position;
 }
 
 void Planet::render() {
