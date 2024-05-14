@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../scene.hpp"
-#include "Object.hpp"
+#include "CelestialBody.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;
 
-class Sun : public Object {
+class Sun : public CelestialBody {
  private:
   scene_structure* scene;
   mesh_drawable sphere;

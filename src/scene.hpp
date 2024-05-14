@@ -5,6 +5,7 @@ struct scene_structure;
 #include <vector>
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
+#include "objects/CelestialBody.hpp"
 #include "objects/Object.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
@@ -53,6 +54,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 
   timer_basic timer;
 
+  std::vector<std::unique_ptr<CelestialBody>> celestial_bodies;
   std::vector<std::unique_ptr<Object>> objects;
 
   opengl_shader_structure shader_custom;
