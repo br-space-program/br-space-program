@@ -1,5 +1,6 @@
 #include "primitives.hpp"
 
+using cgp::norm;
 using cgp::Pi;
 
 mesh create_sphere_mesh(float R, vec3 center, int Nu, int Nv) {
@@ -29,12 +30,28 @@ mesh create_sphere_mesh(float R, vec3 center, int Nu, int Nv) {
       const int k01 = kv + Nv * ((ku + 1) % Nu);
       const int k11 = ((kv + 1) % Nv) + Nv * ((ku + 1) % Nu);
 
+      if (norm(shape.position[k00] - shape.position[k11]) < 1e-6f) {
+        continue;
+      }
+      if (norm(shape.position[k10] - shape.position[k01]) < 1e-6f) {
+        continue;
+      }
+      if (norm(shape.position[k00] - shape.position[k10]) < 1e-6f) {
+        continue;
+      }
+      if (norm(shape.position[k10] - shape.position[k11]) < 1e-6f) {
+        continue;
+      }
+      if (norm(shape.position[k11] - shape.position[k01]) < 1e-6f) {
+        continue;
+      }
+      if (norm(shape.position[k01] - shape.position[k00]) < 1e-6f) {
+        continue;
+      }
+
       shape.connectivity.push_back({k00, k10, k01});
       shape.connectivity.push_back({k10, k11, k01});
     }
-
-    const int k0N = Nv - 1 + Nv * ku;
-    const int k1N = Nv - 1 + Nv * (ku + 1);
   }
 
   shape.fill_empty_field();

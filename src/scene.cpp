@@ -1,4 +1,5 @@
 #include "scene.hpp"
+#include "objects/Planet.hpp"
 #include "objects/Sun.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
@@ -35,6 +36,16 @@ void scene_structure::initialize() {
 
   space_ship = new SpaceShip(this);
   objects.push_back(std::unique_ptr<Object>(space_ship));
+
+  Sun* sun = new Sun(this);
+  objects.push_back(std::unique_ptr<Object>(sun));
+  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
+
+  Planet* planet = new Planet(this, *sun, {100, 10, 0});
+  objects.push_back(std::unique_ptr<Object>(planet));
+
+  Planet* planet2 = new Planet(this, *sun, {50, 10, 0});
+  objects.push_back(std::unique_ptr<Object>(planet2));
 }
 
 // This function is called permanently at every new frame

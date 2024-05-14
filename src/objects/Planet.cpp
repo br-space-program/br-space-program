@@ -4,9 +4,8 @@
 
 using cgp::mesh_drawable;
 
-Planet::Planet(scene_structure* _scene) {
-  scene = _scene;
-
+Planet::Planet(scene_structure* _scene, CelestialBody& _anchor, vec3 _position)
+    : KeplerianBody(_anchor, _position, 0), scene(_scene) {
   int Nu = 100;
   int Nv = 70;
 
@@ -21,10 +20,6 @@ Planet::Planet(scene_structure* _scene) {
 
   for (int ku = 0; ku < Nu; ++ku) {
     for (int kv = 0; kv < Nv; ++kv) {
-      // Compute local parametric coordinates (u,v) \in [0,1]
-      const float u = ku / (Nu - 1.0f);
-      const float v = kv / (Nv - 1.0f);
-
       int const idx = ku * Nv + kv;
 
       // Compute the Perlin noise
@@ -56,7 +51,8 @@ Planet::Planet(scene_structure* _scene) {
 }
 
 void Planet::update() {
-  sphere.model.translation = {0, 0, 0};
+  KeplerianBody::update();
+  sphere.model.translation = position;
 }
 
 void Planet::render() {
