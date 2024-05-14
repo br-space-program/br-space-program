@@ -29,10 +29,6 @@ void scene_structure::initialize() {
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
   // Set up objects here
-  Sun* sun = new Sun(this);
-  objects.push_back(std::unique_ptr<Object>(sun));
-  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
-  collision_bodies.push_back(std::unique_ptr<CollisionBody>(sun));
 
   space_ship = new SpaceShip(this);
   objects.push_back(std::unique_ptr<Object>(space_ship));
@@ -40,6 +36,7 @@ void scene_structure::initialize() {
   Sun* sun = new Sun(this);
   objects.push_back(std::unique_ptr<Object>(sun));
   celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
+  collision_bodies.push_back(std::unique_ptr<CollisionBody>(sun));
 
   Planet* planet = new Planet(this, *sun, {100, 10, 0});
   objects.push_back(std::unique_ptr<Object>(planet));
