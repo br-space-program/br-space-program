@@ -1,6 +1,6 @@
 #include "scene.hpp"
-#include "objects/SpaceShip.hpp"
 #include "objects/Sun.hpp"
+#include "objects/space_ship/SpaceShip.hpp"
 
 using namespace cgp;
 
@@ -20,6 +20,9 @@ void scene_structure::initialize() {
   shader_custom.load(
       project::path + "shaders/shading_custom/shading_custom.vert.glsl",
       project::path + "shaders/shading_custom/shading_custom.frag.glsl");
+
+  shader_glow.load(project::path + "shaders/shader_glow/shader_glow.vert.glsl",
+                   project::path + "shaders/shader_glow/shader_glow.frag.glsl");
 
   // Create the global (x,y,z) frame
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());

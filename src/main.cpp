@@ -102,6 +102,10 @@ void animation_loop() {
   glClear(GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
+  // BRSP Modified
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   float const time_interval = fps_record.update();
   if (fps_record.event) {
     std::string const title = "CGP Display - " + str(fps_record.fps) + " fps";

@@ -10,6 +10,7 @@ class Sun : public Object {
  private:
   scene_structure* scene;
   mesh_drawable sphere;
+  mesh_drawable atmosphere;
 
  public:
   Sun(scene_structure* _scene);
