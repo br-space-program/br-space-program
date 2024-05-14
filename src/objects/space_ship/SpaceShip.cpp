@@ -1,5 +1,6 @@
 #include "SpaceShip.hpp"
 #include <cgp/cgp.hpp>
+#include "../../constants.hpp"
 
 using cgp::mesh_drawable;
 
@@ -67,13 +68,28 @@ SpaceShip::SpaceShip(scene_structure* _scene) {
       new SpaceShipFlame(scene, &hierarchy, "ship_flame_left_down", 0.5,
                          {-0.09, 0.05, 0}, {0, 0, 1}, 3.14 / 2);
 
-  ship_flame = new SpaceShipFlame(scene, &hierarchy, "ship_flame", 1,
-                                  {0, -0.17, 0}, {1, 0, 0}, 3.14);
+  ship_flame = new SpaceShipFlame(
+      scene, &hierarchy, "ship_flame", 1, {0, -0.17, 0}, {1, 0, 0},
+      3.14);  // Order is important to avoid overlapping with shader_glow
 }
 
 void SpaceShip::update() {
   // Update the position of the sphere
   double dt = 1.0 / 60.0;
+
+  // Gravity
+  vec3 acceleration = vec3({0, 0, 0});
+  for (int i = 0; i < scene->celestial_bodies.size(); i++) {
+    CelestialBody* body = scene->celestial_bodies[i].get();
+
+    vec3 direction = body->get_position() - position;
+    double distance = norm(direction);
+
+    acceleration += GRAVITATIONAL_CONSTANT * direction * body->get_mass() /
+                    pow(distance, 3);
+  }
+
+  speed += acceleration * dt;
   position += speed * dt;
   rotation_z += speed_rotation_z * dt;
 
