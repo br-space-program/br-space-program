@@ -6,6 +6,7 @@ struct scene_structure;
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
 #include "objects/CelestialBody.hpp"
+#include "objects/CollisionBody.hpp"
 #include "objects/Object.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
@@ -56,6 +57,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 
   std::vector<std::unique_ptr<CelestialBody>> celestial_bodies;
   std::vector<std::unique_ptr<Object>> objects;
+  std::vector<std::unique_ptr<CollisionBody>> collision_bodies;
 
   opengl_shader_structure shader_custom;
   opengl_shader_structure shader_glow;
