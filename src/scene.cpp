@@ -31,8 +31,9 @@ void scene_structure::initialize() {
   space_ship = new SpaceShip(this);
   objects.push_back(std::unique_ptr<Object>(space_ship));
 
-  objects.push_back(std::unique_ptr<Object>(new Sun(this)));
-  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(new Sun(this)));
+  CelestialBody* sun = new Sun(this);
+  objects.push_back(std::unique_ptr<Object>(sun));
+  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
 }
 
 // This function is called permanently at every new frame
