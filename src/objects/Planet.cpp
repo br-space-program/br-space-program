@@ -8,7 +8,7 @@ Planet::Planet(scene_structure* _scene,
                CelestialBody& _anchor,
                vec3 _position,
                double radius)
-    : KeplerianBody(_anchor, _position, 0, radius), scene(_scene) {
+    : KeplerianBody(_anchor, _position, 10, radius), scene(_scene) {
   int Nu = 100;
   int Nv = 70;
 

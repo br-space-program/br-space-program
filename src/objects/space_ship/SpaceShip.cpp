@@ -8,7 +8,7 @@ using cgp::mesh_drawable;
 // spaceship
 double SPEED = 0.1;
 
-SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(1) {
+SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   scene = _scene;
   position = {100, 0, 0};
   speed = {0, 0, 0};
@@ -96,10 +96,6 @@ void SpaceShip::update() {
     acceleration += -0.5 * speed;
   }
 
-  speed += acceleration * dt;
-  position += speed * dt;
-  rotation_z += speed_rotation_z * dt;
-
   // Collision
   for (int i = 0; i < scene->hitboxes.size(); i++) {
     ObjectWithHitbox* body = scene->hitboxes[i].get();
@@ -110,11 +106,20 @@ void SpaceShip::update() {
               << std::endl;
 
     if (is_collision) {
+      acceleration = vec3({0, 0, 0});
       vec3 direction = body->get_position() - position;
-      position -= direction * (distance - body->get_radius() - radius);
-      speed = {0, 0, 0};
+      // position = body->get_position() +
+      // normalize(direction) * body->get_radius() * 1.1;
+      speed = BOUNCE_LOSS * reflect(speed, normalize(direction));
+      std::cout << "BOUNCE" << std::endl;
     }
   }
+
+  // Update the speed and position based on gravity, but delete gravity if
+  // collision
+  speed += acceleration * dt;
+  position += speed * dt;
+  rotation_z += speed_rotation_z * dt;
 
   hierarchy["ship_center"].transform_local.translation = position;
   hierarchy["ship_center"].transform_local.rotation =
@@ -241,4 +246,8 @@ void SpaceShip::action_keyboard() {
   } else {
     ship_flame_right_down->off();
   }
+}
+
+vec3 reflect(vec3 to_reflect, vec3 normal) {
+  return to_reflect - 2 * dot(to_reflect, normal) * normal;
 }

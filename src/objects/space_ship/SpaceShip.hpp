@@ -39,3 +39,8 @@ class SpaceShip : public ObjectWithHitbox {
 
   void action_keyboard();
 };
+
+/**
+ * Returns the vector `to_reflect` reflected based on vector `normal`.
+ */
+vec3 reflect(vec3 to_reflect, vec3 normal);
