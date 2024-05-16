@@ -79,14 +79,21 @@ void SpaceShip::update() {
 
   // Gravity
   vec3 acceleration = vec3({0, 0, 0});
-  for (int i = 0; i < scene->celestial_bodies.size(); i++) {
-    CelestialBody* body = scene->celestial_bodies[i].get();
 
-    vec3 direction = body->get_position() - position;
-    double distance = norm(direction);
+  if (!scene->debug_movements) {
+    for (int i = 0; i < scene->celestial_bodies.size(); i++) {
+      CelestialBody* body = scene->celestial_bodies[i].get();
 
-    acceleration += GRAVITATIONAL_CONSTANT * direction * body->get_mass() /
-                    pow(distance, 3);
+      vec3 direction = body->get_position() - position;
+      double distance = norm(direction);
+
+      acceleration += GRAVITATIONAL_CONSTANT * direction * body->get_mass() /
+                      pow(distance, 3);
+    }
+  }
+
+  if (scene->debug_movements) {
+    acceleration += -0.5 * speed;
   }
 
   speed += acceleration * dt;

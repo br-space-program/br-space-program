@@ -36,6 +36,8 @@ struct gui_parameters {
 
 // The structure of the custom scene
 struct scene_structure : cgp::scene_inputs_generic {
+  bool debug_movements = false;
+
   // ****************************** //
   // Elements and shapes of the scene
   // ****************************** //

@@ -75,6 +75,7 @@ void scene_structure::display_frame() {
 void scene_structure::display_gui() {
   ImGui::Checkbox("Frame", &gui.display_frame);
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
+  ImGui::Checkbox("Debug Movements", &debug_movements);
 }
 
 void scene_structure::mouse_move_event() {
