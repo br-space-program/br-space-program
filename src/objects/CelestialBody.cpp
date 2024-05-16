@@ -1,6 +1,7 @@
 #include "CelestialBody.hpp"
 
-CelestialBody::CelestialBody(vec3 _position, double _mass) {
+CelestialBody::CelestialBody(vec3 _position, double _mass)
+    : ObjectWithHitbox(20) {
   position = _position;
   mass = _mass;
 }

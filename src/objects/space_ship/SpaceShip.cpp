@@ -8,7 +8,7 @@ using cgp::mesh_drawable;
 // spaceship
 double SPEED = 0.1;
 
-SpaceShip::SpaceShip(scene_structure* _scene) {
+SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(1) {
   scene = _scene;
   position = {100, 0, 0};
   speed = {0, 0, 0};
@@ -100,6 +100,22 @@ void SpaceShip::update() {
   position += speed * dt;
   rotation_z += speed_rotation_z * dt;
 
+  // Collision
+  for (int i = 0; i < scene->hitboxes.size(); i++) {
+    ObjectWithHitbox* body = scene->hitboxes[i].get();
+
+    auto [is_collision, distance] = body->is_in_collision(*this);
+
+    std::cout << "Collision: " << is_collision << "Distance: " << distance
+              << std::endl;
+
+    if (is_collision) {
+      vec3 direction = body->get_position() - position;
+      position -= direction * (distance - body->get_radius() - radius);
+      speed = {0, 0, 0};
+    }
+  }
+
   hierarchy["ship_center"].transform_local.translation = position;
   hierarchy["ship_center"].transform_local.rotation =
       rotation_transform::from_axis_angle({0, 0, 1}, rotation_z);
@@ -127,6 +143,7 @@ void SpaceShip::render() {
 void SpaceShip::render_debug() {
   // Display the wireframe of the sphere
   draw_wireframe(hierarchy, scene->environment);
+  collision_render_debug();
 }
 
 void SpaceShip::action_keyboard() {
