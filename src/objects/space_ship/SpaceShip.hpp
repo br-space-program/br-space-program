@@ -2,14 +2,16 @@
 
 class SpaceShip;
 
-#include "../../scene.hpp"
+struct scene_structure;
+
+#include "../CollisionBody.hpp"
 #include "../Object.hpp"
 #include "SpaceShipFlame.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;
 
-class SpaceShip : public Object {
+class SpaceShip : public Object, public CollisionBody {
  private:
   scene_structure* scene;
   mesh_drawable ship;

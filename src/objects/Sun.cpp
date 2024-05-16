@@ -4,7 +4,7 @@
 using cgp::mesh_drawable;
 
 Sun::Sun(scene_structure* _scene)
-    : CelestialBody({0, 0, 0}, 42), CollisionBody({0, 0, 0}, 20.0) {
+    : CelestialBody({0, 0, 0}, 42), CollisionBody(_scene, {0, 0, 0}, 40.0) {
   scene = _scene;
 
   mesh sphere_mesh = mesh_primitive_sphere();
@@ -54,4 +54,5 @@ void Sun::render() {
 void Sun::render_debug() {
   // Display the wireframe of the sphere
   draw_wireframe(sphere, scene->environment);
+  collision_render_debug();
 }
