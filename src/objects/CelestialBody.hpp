@@ -11,7 +11,7 @@ class CelestialBody : public ObjectWithHitbox {
   double mass;
 
  public:
-  CelestialBody(vec3 _position, double _mass);
+  CelestialBody(vec3 _position, double _mass, double _radius);
   virtual void update() override = 0;
   virtual void render() override = 0;
   virtual void render_debug() override = 0;

@@ -38,10 +38,10 @@ void scene_structure::initialize() {
   celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
   hitboxes.push_back(std::unique_ptr<ObjectWithHitbox>(sun));
 
-  Planet* planet = new Planet(this, *sun, {100, 10, 0});
+  Planet* planet = new Planet(this, *sun, {100, 10, 0}, 1);
   objects.push_back(std::unique_ptr<Object>(planet));
 
-  Planet* planet2 = new Planet(this, *sun, {50, 10, 0});
+  Planet* planet2 = new Planet(this, *sun, {50, 10, 0}, 10);
   objects.push_back(std::unique_ptr<Object>(planet2));
 }
 

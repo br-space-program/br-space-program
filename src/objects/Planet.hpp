@@ -12,7 +12,10 @@ class Planet : public KeplerianBody {
   mesh_drawable sphere;
 
  public:
-  Planet(scene_structure* _scene, CelestialBody& _anchor, vec3 _position);
+  Planet(scene_structure* _scene,
+         CelestialBody& _anchor,
+         vec3 _position,
+         double _radius);
   void update() override;
   void render() override;
   void render_debug() override;

@@ -8,8 +8,9 @@ using cgp::vec3;
 
 KeplerianBody::KeplerianBody(CelestialBody& _anchor,
                              vec3 _position,
-                             double _mass)
-    : CelestialBody(_position, _mass) {
+                             double _mass,
+                             double _radius)
+    : CelestialBody(_position, _mass, _radius) {
   set_anchor(_anchor);
   position.z = 0;
 }

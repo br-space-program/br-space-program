@@ -4,12 +4,15 @@
 
 using cgp::mesh_drawable;
 
-Planet::Planet(scene_structure* _scene, CelestialBody& _anchor, vec3 _position)
-    : KeplerianBody(_anchor, _position, 0), scene(_scene) {
+Planet::Planet(scene_structure* _scene,
+               CelestialBody& _anchor,
+               vec3 _position,
+               double radius)
+    : KeplerianBody(_anchor, _position, 0, radius), scene(_scene) {
   int Nu = 100;
   int Nv = 70;
 
-  mesh shape = create_sphere_mesh(1, {0, 0, 0}, Nu, Nv);
+  mesh shape = create_sphere_mesh(radius, {0, 0, 0}, Nu, Nv);
 
   shape.fill_empty_field();
 
