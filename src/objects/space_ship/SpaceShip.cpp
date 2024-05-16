@@ -106,7 +106,7 @@ void SpaceShip::update() {
 
     auto [is_collision, distance] = body->is_in_collision(*this);
 
-    std::cout << "Collision: " << is_collision << "Distance: " << distance
+    std::cout << "Collision: " << is_collision << " Distance: " << distance
               << std::endl;
 
     if (is_collision) {
