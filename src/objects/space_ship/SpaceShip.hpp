@@ -4,14 +4,13 @@ class SpaceShip;
 
 struct scene_structure;
 
-#include "../CollisionBody.hpp"
-#include "../Object.hpp"
+#include "../ObjectWithHitbox.hpp"
 #include "SpaceShipFlame.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;
 
-class SpaceShip : public Object, public CollisionBody {
+class SpaceShip : public ObjectWithHitbox {
  private:
   scene_structure* scene;
   mesh_drawable ship;
@@ -25,7 +24,6 @@ class SpaceShip : public Object, public CollisionBody {
   SpaceShipFlame* ship_flame_left_up;
   SpaceShipFlame* ship_flame_left_down;
 
-  vec3 position;
   vec3 speed;
   double rotation_z;  // Around z axis
   double speed_rotation_z;

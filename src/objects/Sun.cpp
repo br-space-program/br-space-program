@@ -3,8 +3,7 @@
 
 using cgp::mesh_drawable;
 
-Sun::Sun(scene_structure* _scene)
-    : CelestialBody({0, 0, 0}, 42), CollisionBody(_scene, {0, 0, 0}, 40.0) {
+Sun::Sun(scene_structure* _scene) : CelestialBody({0, 0, 0}, 42) {
   scene = _scene;
 
   mesh sphere_mesh = mesh_primitive_sphere();

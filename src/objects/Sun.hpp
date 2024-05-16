@@ -2,12 +2,11 @@
 
 #include "../scene.hpp"
 #include "CelestialBody.hpp"
-#include "CollisionBody.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;
 
-class Sun : public CelestialBody, public CollisionBody {
+class Sun : public CelestialBody {
  private:
   scene_structure* scene;
   mesh_drawable sphere;

@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Object.hpp"
+#include "ObjectWithHitbox.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::vec3;
 
-class CelestialBody : public Object {
+class CelestialBody : public ObjectWithHitbox {
  protected:
-  vec3 position;
   double mass;
 
  public:

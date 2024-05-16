@@ -8,8 +8,7 @@ using cgp::mesh_drawable;
 // spaceship
 double SPEED = 0.1;
 
-SpaceShip::SpaceShip(scene_structure* _scene)
-    : CollisionBody(_scene, {100, 0, 0}, 1) {
+SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(1) {
   scene = _scene;
   position = {100, 0, 0};
   speed = {0, 0, 0};
@@ -95,8 +94,8 @@ void SpaceShip::update() {
   rotation_z += speed_rotation_z * dt;
 
   // Collision
-  for (int i = 0; i < scene->collision_bodies.size(); i++) {
-    CollisionBody* body = scene->collision_bodies[i].get();
+  for (int i = 0; i < scene->hitboxes.size(); i++) {
+    ObjectWithHitbox* body = scene->hitboxes[i].get();
 
     auto [is_collision, distance] = body->is_in_collision(*this);
 

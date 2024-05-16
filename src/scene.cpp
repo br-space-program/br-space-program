@@ -36,7 +36,7 @@ void scene_structure::initialize() {
   Sun* sun = new Sun(this);
   objects.push_back(std::unique_ptr<Object>(sun));
   celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
-  collision_bodies.push_back(std::unique_ptr<CollisionBody>(sun));
+  hitboxes.push_back(std::unique_ptr<ObjectWithHitbox>(sun));
 
   Planet* planet = new Planet(this, *sun, {100, 10, 0});
   objects.push_back(std::unique_ptr<Object>(planet));
