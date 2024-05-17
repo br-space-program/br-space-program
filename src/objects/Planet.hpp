@@ -10,6 +10,7 @@ class Planet : public KeplerianBody {
  private:
   scene_structure* scene;
   mesh_drawable sphere;
+  mesh_drawable atmosphere;
 
  public:
   Planet(scene_structure* _scene,

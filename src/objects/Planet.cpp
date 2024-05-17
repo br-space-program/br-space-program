@@ -8,7 +8,7 @@ Planet::Planet(scene_structure* _scene,
                CelestialBody& _anchor,
                vec3 _position,
                double radius)
-    : KeplerianBody(_anchor, _position, 10, radius), scene(_scene) {
+    : KeplerianBody(_anchor, _position, 2, radius), scene(_scene) {
   int Nu = 100;
   int Nv = 70;
 
@@ -51,15 +51,22 @@ Planet::Planet(scene_structure* _scene,
 
   std::cout << "Planet created" << std::endl;
   std::cout << shape.position.size() << std::endl;
+
+  // ==== Atmoshpere ====
+  atmosphere.initialize_data_on_gpu(mesh_primitive_sphere(radius * 5));
+  atmosphere.shader = scene->shader_glow;
+  atmosphere.material.color = {1, 1, 1};  // {0.01, 0.65, 0.99};
 }
 
 void Planet::update() {
   KeplerianBody::update();
   sphere.model.translation = position;
+  atmosphere.model.translation = position;
 }
 
 void Planet::render() {
   draw(sphere, scene->environment);
+  draw(atmosphere, scene->environment);
 }
 
 void Planet::render_debug() {
