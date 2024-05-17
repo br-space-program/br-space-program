@@ -1,5 +1,6 @@
 #include "Planet.hpp"
 #include <cgp/cgp.hpp>
+#include "../constants.hpp"
 #include "../mesh/primitives.hpp"
 
 using cgp::mesh_drawable;
@@ -8,7 +9,11 @@ Planet::Planet(scene_structure* _scene,
                CelestialBody& _anchor,
                vec3 _position,
                double radius)
-    : KeplerianBody(_anchor, _position, 2, radius), scene(_scene) {
+    : KeplerianBody(_anchor,
+                    _position,
+                    PLANET_DENSITY * pow(radius, 3),
+                    radius),
+      scene(_scene) {
   int Nu = 100;
   int Nv = 70;
 
