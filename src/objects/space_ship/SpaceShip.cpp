@@ -111,8 +111,8 @@ void SpaceShip::update() {
 
     auto [is_collision, distance] = body->is_in_collision(*this);
 
-    std::cout << "Collision: " << is_collision << " Distance: " << distance
-              << std::endl;
+    // std::cout << "Collision: " << is_collision << " Distance: " << distance
+    //         << std::endl;
 
     if (is_collision) {
       acceleration = vec3({0, 0, 0});

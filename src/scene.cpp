@@ -1,9 +1,11 @@
 #include "scene.hpp"
+#include <algorithm>
 #include "objects/Planet.hpp"
 #include "objects/Sun.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
 using namespace cgp;
+using namespace std;
 
 // This function is called only once at the beginning of the program
 // This function can contain any complex operation that can be pre-computed once
@@ -16,6 +18,18 @@ void scene_structure::initialize() {
   //   look_at(camera_position, targeted_point, up_direction)
 
   display_info();
+
+  // Load the skybox
+  image_structure image_skybox =
+      image_load_file(project::path + "assets/skybox_01.jpg");
+
+  std::vector<image_structure> image_skybox_grid =
+      image_split_grid(image_skybox, 4, 3);
+
+  skybox.initialize_data_on_gpu();
+  skybox.texture.initialize_cubemap_on_gpu(
+      image_skybox_grid[1], image_skybox_grid[7], image_skybox_grid[5],
+      image_skybox_grid[3], image_skybox_grid[10], image_skybox_grid[4]);
 
   // Load the custom shader
   shader_custom.load(
@@ -66,6 +80,12 @@ void scene_structure::display_frame() {
   // Update time
   timer.update();
 
+  //  Must be called before drawing the other shapes and without writing in the
+  //  Depth Buffer
+  glDepthMask(GL_FALSE);  // disable depth-buffer writing
+  draw(skybox, environment);
+  glDepthMask(GL_TRUE);  // re-activate depth-buffer write
+
   // conditional display of the global frame (set via the GUI)
   if (gui.display_frame)
     draw(global_frame, environment);
@@ -78,7 +98,19 @@ void scene_structure::display_frame() {
     object->render();
   }
 
+  // == Render transparent objects ==
+
   // TODO: Render closer transparent objects first
+  vec3 camera_position = camera_control.camera_model.position();
+  std::sort(transparent_objects.begin(), transparent_objects.end(),
+            [&camera_position](const std::unique_ptr<Object>& a,
+                               const std::unique_ptr<Object>& b) {
+              return norm(a->get_position() - camera_position) >
+                     norm(b->get_position() - camera_position);
+            });
+
+  std::cout << transparent_objects[0].get()->get_position() << std::endl;
+
   for (auto& object : transparent_objects) {
     object->render();
   }

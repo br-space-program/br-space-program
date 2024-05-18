@@ -127,6 +127,8 @@ void main()
 
 	float alpha = pow(fragment.glow_transparency, 10.0f);
 
+	alpha = max(0, min(1, alpha));
+
 	// Output color, with the alpha component
 	FragColor = vec4(color_shading, alpha);
 }
