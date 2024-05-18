@@ -2,6 +2,7 @@
 
 #include "../scene.hpp"
 #include "KeplerianBody.hpp"
+#include "SimpleObject.hpp"
 #include "cgp/cgp.hpp"
 
 using cgp::mesh_drawable;
@@ -10,9 +11,9 @@ class Planet : public KeplerianBody {
  private:
   scene_structure* scene;
   mesh_drawable sphere;
-  mesh_drawable atmosphere;
 
  public:
+  SimpleObject* atmosphere;
   Planet(scene_structure* _scene,
          CelestialBody& _anchor,
          vec3 _position,

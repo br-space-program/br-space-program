@@ -47,6 +47,15 @@ void scene_structure::initialize() {
   objects.push_back(std::unique_ptr<Object>(planet2));
   celestial_bodies.push_back(std::unique_ptr<CelestialBody>(planet2));
   hitboxes.push_back(std::unique_ptr<ObjectWithHitbox>(planet2));
+
+  // === Atmospheres and glow ===
+  transparent_objects.push_back(std::unique_ptr<Object>(sun->atmosphere));
+  transparent_objects.push_back(std::unique_ptr<Object>(planet->atmosphere));
+  transparent_objects.push_back(std::unique_ptr<Object>(planet2->atmosphere));
+
+  for (auto& ship_flame : space_ship->ship_flames) {
+    transparent_objects.push_back(std::unique_ptr<Object>(ship_flame->flare));
+  }
 }
 
 // This function is called permanently at every new frame
@@ -69,8 +78,16 @@ void scene_structure::display_frame() {
     object->render();
   }
 
+  // TODO: Render closer transparent objects first
+  for (auto& object : transparent_objects) {
+    object->render();
+  }
+
   if (gui.display_wireframe) {
     for (auto& object : objects) {
+      object->render_debug();
+    }
+    for (auto& object : transparent_objects) {
       object->render_debug();
     }
   }

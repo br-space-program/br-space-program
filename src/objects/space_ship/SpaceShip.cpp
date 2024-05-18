@@ -71,6 +71,15 @@ SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   ship_flame = new SpaceShipFlame(
       scene, &hierarchy, "ship_flame", 1, {0, -0.17, 0}, {1, 0, 0},
       3.14);  // Order is important to avoid overlapping with shader_glow
+
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_front));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_top));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_bottom));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_right_up));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_right_down));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_left_up));
+  ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_left_down));
 }
 
 void SpaceShip::update() {
@@ -128,14 +137,9 @@ void SpaceShip::update() {
   scene->camera_control.camera_model.center_of_rotation =
       position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
 
-  ship_flame->update();
-  ship_flame_front->update();
-  ship_flame_top->update();
-  ship_flame_bottom->update();
-  ship_flame_right_up->update();
-  ship_flame_right_down->update();
-  ship_flame_left_up->update();
-  ship_flame_left_down->update();
+  for (auto& ship_flame : ship_flames) {
+    ship_flame->update();
+  }
 
   hierarchy.update_local_to_global_coordinates();
 }

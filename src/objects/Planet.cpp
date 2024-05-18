@@ -58,20 +58,24 @@ Planet::Planet(scene_structure* _scene,
   std::cout << shape.position.size() << std::endl;
 
   // ==== Atmoshpere ====
-  atmosphere.initialize_data_on_gpu(mesh_primitive_sphere(radius * 5));
-  atmosphere.shader = scene->shader_glow;
-  atmosphere.material.color = {1, 1, 1};  // {0.01, 0.65, 0.99};
+  atmosphere = new SimpleObject(scene);
+
+  atmosphere->mesh.initialize_data_on_gpu(mesh_primitive_sphere(radius * 5));
+  atmosphere->mesh.shader = scene->shader_glow;
+  atmosphere->mesh.material.color = {1, 1, 1};  // {0.01, 0.65, 0.99};
+
+  atmosphere->set_position(position);
 }
 
 void Planet::update() {
   KeplerianBody::update();
   sphere.model.translation = position;
-  atmosphere.model.translation = position;
+  atmosphere->set_position(position);
+  atmosphere->update();
 }
 
 void Planet::render() {
   draw(sphere, scene->environment);
-  draw(atmosphere, scene->environment);
 }
 
 void Planet::render_debug() {

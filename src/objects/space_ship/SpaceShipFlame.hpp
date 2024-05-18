@@ -1,6 +1,7 @@
 #pragma once
 
 class SpaceShipFlame;
+class SimpleObject;
 
 #include <string>
 #include "../../scene.hpp"
@@ -14,19 +15,24 @@ class SpaceShipFlame {
   scene_structure* scene;
   cgp::hierarchy_mesh_drawable* hierarchy;
   std::string name;
+  double scale;
+  vec3 position;
+  vec3 rotation_axis;
+  double rotation_angle;
 
-  mesh_drawable flare;
   mesh_drawable flame;
   mesh_drawable flame_small;
+  mesh_drawable flare_mesh;
 
  public:
+  SimpleObject* flare;
   SpaceShipFlame(scene_structure* _scene,
                  cgp::hierarchy_mesh_drawable* _hierarchy,
                  std::string _name,
-                 double scale,
-                 vec3 position,
-                 vec3 rotation_axis,
-                 double rotation_angle);
+                 double _scale,
+                 vec3 _position,
+                 vec3 _rotation_axis,
+                 double _rotation_angle);
   void update();
 
   ~SpaceShipFlame() = default;

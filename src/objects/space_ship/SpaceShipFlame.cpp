@@ -1,18 +1,23 @@
 #include "SpaceShipFlame.hpp"
 #include <cgp/cgp.hpp>
+#include "../SimpleObject.hpp"
 
 using cgp::mesh_drawable;
 
 SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
                                cgp::hierarchy_mesh_drawable* _hierarchy,
                                std::string _name,
-                               double scale,
-                               vec3 position,
-                               vec3 rotation_axis,
-                               double rotation_angle) {
+                               double _scale,
+                               vec3 _position,
+                               vec3 _rotation_axis,
+                               double _rotation_angle) {
   scene = _scene;
   hierarchy = _hierarchy;
   name = _name;
+  scale = _scale;
+  position = _position;
+  rotation_axis = _rotation_axis;
+  rotation_angle = _rotation_angle;
 
   // Load the SpaceShipFlame
   flame.initialize_data_on_gpu(
@@ -53,34 +58,37 @@ SpaceShipFlame::SpaceShipFlame(scene_structure* _scene,
       rotation_transform::from_axis_angle({0, 1, 0}, 3.14f / 2);
 
   // ==== Flare ====
-  flare.initialize_data_on_gpu(mesh_primitive_ellipsoid({0.1f, 0.25f, 0.1f}));
+  flare = new SimpleObject(scene);
 
-  flare.model.scaling = 1.1 * scale;
-  flare.material.color = {1, 0.73, 0.08};
+  flare_mesh.initialize_data_on_gpu(
+      mesh_primitive_ellipsoid({0.1f, 0.25f, 0.1f}));
+
+  flare_mesh.model.scaling = 1.1 * scale;
+  flare_mesh.material.color = {1, 0.73, 0.08};
 
   // Make it a light source
-  flare.material.phong.ambient = 1;
-  flare.material.phong.diffuse = 0;
-  flare.material.phong.specular = 0;
+  flare_mesh.material.phong.ambient = 1;
+  flare_mesh.material.phong.diffuse = 0;
+  flare_mesh.material.phong.specular = 0;
 
   // Add shader
-  flare.shader = scene->shader_glow;
-
-  hierarchy->add(flare, name + "_flare", name);
+  flare_mesh.shader = scene->shader_glow;
+  flare->mesh = flare_mesh;
+  hierarchy->add(flare->mesh, name + "_flare", name);
 
   off();
 }
 
 void SpaceShipFlame::on() {
   (*hierarchy)[name].drawable = flame;
-  (*hierarchy)[name + "_flare"].drawable = flare;
   (*hierarchy)[name + "_small"].drawable = flame_small;
+  (*hierarchy)[name + "_flare"].drawable = flare->mesh;
 }
 
 void SpaceShipFlame::off() {
   (*hierarchy)[name].drawable = mesh_drawable();
-  (*hierarchy)[name + "_flare"].drawable = mesh_drawable();
   (*hierarchy)[name + "_small"].drawable = mesh_drawable();
+  (*hierarchy)[name + "_flare"].drawable = mesh_drawable();
 }
 
 void SpaceShipFlame::update() {
@@ -94,6 +102,13 @@ void SpaceShipFlame::update() {
   (*hierarchy)[name + "_small"].drawable.model.scaling_xyz = {
       1 + 0.1 * flame_offset(scene->timer.t + 42),
       1 + 0.5 * flame_offset(scene->timer.t + 64), 1};
+
+  // The global position is computed by the hierarchy
+  // We then send it to flare for the transparency order
+  affine_rts flare_pos =
+      (*hierarchy)[name + "_flare"].drawable.hierarchy_transform_model;
+
+  flare->set_position(flare_pos.translation);
 }
 
 double flame_offset(double t) {

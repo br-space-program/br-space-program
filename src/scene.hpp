@@ -59,6 +59,8 @@ struct scene_structure : cgp::scene_inputs_generic {
   std::vector<std::unique_ptr<CelestialBody>> celestial_bodies;
   std::vector<std::unique_ptr<Object>> objects;
   std::vector<std::unique_ptr<ObjectWithHitbox>> hitboxes;
+  std::vector<std::unique_ptr<Object>>
+      transparent_objects;  // Must be drawn after all other objects
 
   opengl_shader_structure shader_custom;
   opengl_shader_structure shader_glow;

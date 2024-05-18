@@ -11,6 +11,9 @@ struct scene_structure;
 using cgp::mesh_drawable;
 
 class SpaceShip : public ObjectWithHitbox {
+ public:
+  std::vector<std::unique_ptr<SpaceShipFlame>> ship_flames;
+
  private:
   scene_structure* scene;
   mesh_drawable ship;
