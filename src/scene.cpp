@@ -21,7 +21,7 @@ void scene_structure::initialize() {
 
   // Load the skybox
   image_structure image_skybox =
-      image_load_file(project::path + "assets/skybox_01.jpg");
+      image_load_file(project::path + "assets/skybox.png");
 
   std::vector<image_structure> image_skybox_grid =
       image_split_grid(image_skybox, 4, 3);
