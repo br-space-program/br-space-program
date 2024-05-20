@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "objects/Planet.hpp"
 #include "objects/Sun.hpp"
+#include "objects/Tesseract.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
 using namespace cgp;
@@ -45,31 +46,33 @@ void scene_structure::initialize() {
   // Set up objects here
 
   space_ship = new SpaceShip(this);
-  objects.push_back(std::unique_ptr<Object>(space_ship));
+
+  test_world = new World(this);
 
   Sun* sun = new Sun(this);
-  objects.push_back(std::unique_ptr<Object>(sun));
-  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(sun));
-  hitboxes.push_back(std::unique_ptr<ObjectWithHitbox>(sun));
+  test_world->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
+  test_world->add_object(std::unique_ptr<Object>(sun));
+  test_world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
 
   Planet* planet = new Planet(this, *sun, {100, 10, 0}, 1);
-  objects.push_back(std::unique_ptr<Object>(planet));
-  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(planet));
-  hitboxes.push_back(std::unique_ptr<ObjectWithHitbox>(planet));
+  test_world->add_celestial_body(std::unique_ptr<CelestialBody>(planet));
+  test_world->add_object(std::unique_ptr<Object>(planet));
+  test_world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet));
 
   Planet* planet2 = new Planet(this, *sun, {50, 10, 0}, 10);
-  objects.push_back(std::unique_ptr<Object>(planet2));
-  celestial_bodies.push_back(std::unique_ptr<CelestialBody>(planet2));
-  hitboxes.push_back(std::unique_ptr<ObjectWithHitbox>(planet2));
+  test_world->add_celestial_body(std::unique_ptr<CelestialBody>(planet2));
+  test_world->add_object(std::unique_ptr<Object>(planet2));
+  test_world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2));
 
   // === Atmospheres and glow ===
-  transparent_objects.push_back(std::unique_ptr<Object>(sun->atmosphere));
-  transparent_objects.push_back(std::unique_ptr<Object>(planet->atmosphere));
-  transparent_objects.push_back(std::unique_ptr<Object>(planet2->atmosphere));
+  test_world->add_transparent_object(std::unique_ptr<Object>(sun->atmosphere));
+  test_world->add_transparent_object(
+      std::unique_ptr<Object>(planet->atmosphere));
+  test_world->add_transparent_object(
+      std::unique_ptr<Object>(planet2->atmosphere));
 
-  for (auto& ship_flame : space_ship->ship_flames) {
-    transparent_objects.push_back(std::unique_ptr<Object>(ship_flame->flare));
-  }
+  // Tesseract* tesseract = new Tesseract(this, {100, 5, -5}, 3);
+  // objects.push_back(std::unique_ptr<Object>(tesseract));
 }
 
 // This function is called permanently at every new frame
@@ -90,16 +93,24 @@ void scene_structure::display_frame() {
   if (gui.display_frame)
     draw(global_frame, environment);
 
-  for (auto& object : objects) {
-    object->update();
-  }
+  // Update the objects
+  test_world->update();
+  space_ship->update();
 
-  for (auto& object : objects) {
-    object->render();
-  }
+  // Display the objects
+  test_world->render();
+  space_ship->render();
 
   // == Render transparent objects ==
 
+  // Step 1: collect
+  std::vector<std::unique_ptr<Object>>& transparent_objects(
+      test_world->get_transparent_objects());
+  for (auto& ship_flame : space_ship->ship_flames) {
+    transparent_objects.push_back(std::unique_ptr<Object>(ship_flame->flare));
+  }
+
+  // Step 2: sort
   // TODO: Render closer transparent objects first
   vec3 camera_position = camera_control.camera_model.position();
   std::sort(transparent_objects.begin(), transparent_objects.end(),
@@ -111,17 +122,14 @@ void scene_structure::display_frame() {
 
   std::cout << transparent_objects[0].get()->get_position() << std::endl;
 
+  // Step 3: render
   for (auto& object : transparent_objects) {
     object->render();
   }
 
   if (gui.display_wireframe) {
-    for (auto& object : objects) {
-      object->render_debug();
-    }
-    for (auto& object : transparent_objects) {
-      object->render_debug();
-    }
+    test_world->render_debug();
+    space_ship->render_debug();
   }
 }
 

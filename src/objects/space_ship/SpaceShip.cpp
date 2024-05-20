@@ -90,8 +90,11 @@ void SpaceShip::update() {
   vec3 acceleration = vec3({0, 0, 0});
 
   if (!scene->debug_movements) {
-    for (int i = 0; i < scene->celestial_bodies.size(); i++) {
-      CelestialBody* body = scene->celestial_bodies[i].get();
+    auto& celestial_bodies =
+        scene->test_world->get_celestial_bodies();  // FIXME:
+
+    for (int i = 0; i < celestial_bodies.size(); i++) {
+      CelestialBody* body = celestial_bodies[i].get();
 
       vec3 direction = body->get_position() - position;
       double distance = norm(direction);
@@ -106,8 +109,10 @@ void SpaceShip::update() {
   }
 
   // Collision
-  for (int i = 0; i < scene->hitboxes.size(); i++) {
-    ObjectWithHitbox* body = scene->hitboxes[i].get();
+  auto& hitboxes = scene->test_world->get_hitboxes();  // FIXME:
+
+  for (int i = 0; i < hitboxes.size(); i++) {
+    ObjectWithHitbox* body = hitboxes[i].get();
 
     auto [is_collision, distance] = body->is_in_collision(*this);
 

@@ -3,10 +3,9 @@
 struct scene_structure;
 
 #include <vector>
+#include "World.hpp"
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
-#include "objects/CelestialBody.hpp"
-#include "objects/Object.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
@@ -57,15 +56,10 @@ struct scene_structure : cgp::scene_inputs_generic {
 
   timer_basic timer;
 
-  std::vector<std::unique_ptr<CelestialBody>> celestial_bodies;
-  std::vector<std::unique_ptr<Object>> objects;
-  std::vector<std::unique_ptr<ObjectWithHitbox>> hitboxes;
-  std::vector<std::unique_ptr<Object>>
-      transparent_objects;  // Must be drawn after all other objects
-
   opengl_shader_structure shader_custom;
   opengl_shader_structure shader_glow;
 
+  World* test_world;
   SpaceShip* space_ship;
 
   // ****************************** //
