@@ -33,6 +33,8 @@ class SpaceShip : public ObjectWithHitbox {
 
   cgp::hierarchy_mesh_drawable hierarchy;
 
+  vec3 compute_acceleration();
+
  public:
   SpaceShip(scene_structure* _scene);
   void update() override;

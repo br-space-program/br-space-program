@@ -82,16 +82,22 @@ SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_left_down));
 }
 
-void SpaceShip::update() {
-  // Update the position of the sphere
-  double dt = 1.0 / 60.0;
-
-  // Gravity
+vec3 SpaceShip::compute_acceleration() {
   vec3 acceleration = vec3({0, 0, 0});
 
+  // Easier movements when debugging
+  if (scene->debug_movements) {
+    acceleration += -0.5 * speed;
+  }
+
+  World* world = scene->tesseract->get_active_world();
+  if (world == nullptr) {
+    return acceleration;
+  }
+
+  // Gravity
   if (!scene->debug_movements) {
-    auto& celestial_bodies =
-        scene->test_world->get_celestial_bodies();  // FIXME:
+    auto& celestial_bodies = world->get_celestial_bodies();
 
     for (int i = 0; i < celestial_bodies.size(); i++) {
       CelestialBody* body = celestial_bodies[i].get();
@@ -104,12 +110,8 @@ void SpaceShip::update() {
     }
   }
 
-  if (scene->debug_movements) {
-    acceleration += -0.5 * speed;
-  }
-
   // Collision
-  auto& hitboxes = scene->test_world->get_hitboxes();  // FIXME:
+  auto& hitboxes = world->get_hitboxes();
 
   for (int i = 0; i < hitboxes.size(); i++) {
     ObjectWithHitbox* body = hitboxes[i].get();
@@ -128,6 +130,15 @@ void SpaceShip::update() {
       std::cout << "BOUNCE" << std::endl;
     }
   }
+
+  return acceleration;
+}
+
+void SpaceShip::update() {
+  // Update the position of the sphere
+  double dt = 1.0 / 60.0;
+
+  vec3 acceleration = compute_acceleration();
 
   // Update the speed and position based on gravity, but delete gravity if
   // collision
