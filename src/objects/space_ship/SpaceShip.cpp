@@ -14,6 +14,7 @@ SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   speed = {0, 0, 0};
   rotation_z = 0;
   speed_rotation_z = 0;
+  camera_locked = true;
 
   scene->camera_control.look_at(
       position +
@@ -150,8 +151,16 @@ void SpaceShip::update() {
   hierarchy["ship_center"].transform_local.rotation =
       rotation_transform::from_axis_angle({0, 0, 1}, rotation_z);
 
-  scene->camera_control.camera_model.center_of_rotation =
-      position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
+  // Change camera position
+  if (camera_locked) {
+    scene->camera_control.look_at(
+        position + rotation_transform::from_axis_angle({0, 0, 1}, rotation_z) *
+                       vec3({0, -1, 0.4}),
+        position, {0, 0, 1});
+  } else {
+    scene->camera_control.camera_model.center_of_rotation =
+        position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
+  }
 
   for (auto& ship_flame : ship_flames) {
     ship_flame->update();

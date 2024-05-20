@@ -13,6 +13,7 @@ using cgp::mesh_drawable;
 class SpaceShip : public ObjectWithHitbox {
  public:
   std::vector<std::unique_ptr<SpaceShipFlame>> ship_flames;
+  bool camera_locked;
 
  private:
   scene_structure* scene;

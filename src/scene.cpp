@@ -158,6 +158,7 @@ void scene_structure::display_gui() {
   ImGui::Checkbox("Frame", &gui.display_frame);
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
   ImGui::Checkbox("Debug Movements", &debug_movements);
+  ImGui::Checkbox("Locked camera", &space_ship->camera_locked);
 }
 
 void scene_structure::mouse_move_event() {
