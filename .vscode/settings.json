@@ -76,7 +76,14 @@
     "set": "cpp",
     "sstream": "cpp",
     "variant": "cpp",
-    "cinttypes": "cpp"
+    "cinttypes": "cpp",
+    "charconv": "cpp",
+    "complex": "cpp",
+    "format": "cpp",
+    "shared_mutex": "cpp",
+    "span": "cpp",
+    "text_encoding": "cpp",
+    "cfenv": "cpp"
   },
   "C_Cpp.clang_format_fallbackStyle": "Chromium",
   "editor.formatOnSave": true,
