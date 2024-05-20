@@ -60,7 +60,7 @@ struct scene_structure : cgp::scene_inputs_generic {
   opengl_shader_structure shader_custom;
   opengl_shader_structure shader_glow;
 
-  World* worlds[SIDES_COUNT];
+  World* worlds[SIDES_COUNT] = {nullptr};
   SpaceShip* space_ship;
   Tesseract* tesseract;
 

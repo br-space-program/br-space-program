@@ -269,7 +269,9 @@ void Tesseract::render_inside_tesseract() {
 
 void Tesseract::render_outside_tesseract() {
   // Draw the current world
-  worlds[current_world]->render();
+  if (worlds[current_world] != nullptr) {
+    worlds[current_world]->render();
+  }
 
   draw(box_frame, scene->environment);
 
