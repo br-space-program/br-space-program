@@ -1,5 +1,6 @@
 #include "scene.hpp"
 #include <algorithm>
+#include "objects/PerfectSphere.hpp"
 #include "objects/Planet.hpp"
 #include "objects/Sun.hpp"
 #include "objects/Tesseract.hpp"
@@ -47,32 +48,40 @@ void scene_structure::initialize() {
 
   space_ship = new SpaceShip(this);
 
-  test_world = new World(this);
+  World* world1 = new World(this);
 
   Sun* sun = new Sun(this);
-  test_world->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
-  test_world->add_object(std::unique_ptr<Object>(sun));
-  test_world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
+  world1->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
+  world1->add_object(std::unique_ptr<Object>(sun));
+  world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
 
   Planet* planet = new Planet(this, *sun, {100, 10, 0}, 1);
-  test_world->add_celestial_body(std::unique_ptr<CelestialBody>(planet));
-  test_world->add_object(std::unique_ptr<Object>(planet));
-  test_world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet));
+  world1->add_celestial_body(std::unique_ptr<CelestialBody>(planet));
+  world1->add_object(std::unique_ptr<Object>(planet));
+  world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet));
 
   Planet* planet2 = new Planet(this, *sun, {50, 10, 0}, 10);
-  test_world->add_celestial_body(std::unique_ptr<CelestialBody>(planet2));
-  test_world->add_object(std::unique_ptr<Object>(planet2));
-  test_world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2));
+  world1->add_celestial_body(std::unique_ptr<CelestialBody>(planet2));
+  world1->add_object(std::unique_ptr<Object>(planet2));
+  world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2));
 
   // === Atmospheres and glow ===
-  test_world->add_transparent_object(std::unique_ptr<Object>(sun->atmosphere));
-  test_world->add_transparent_object(
-      std::unique_ptr<Object>(planet->atmosphere));
-  test_world->add_transparent_object(
-      std::unique_ptr<Object>(planet2->atmosphere));
+  world1->add_transparent_object(std::unique_ptr<Object>(sun->atmosphere));
+  world1->add_transparent_object(std::unique_ptr<Object>(planet->atmosphere));
+  world1->add_transparent_object(std::unique_ptr<Object>(planet2->atmosphere));
 
-  // Tesseract* tesseract = new Tesseract(this, {100, 5, -5}, 3);
-  // objects.push_back(std::unique_ptr<Object>(tesseract));
+  World* world2 = new World(this);
+
+  PerfectSphere* sphere = new PerfectSphere(this, {100, 5, -5}, 1);
+  world2->add_object(std::unique_ptr<Object>(sphere));
+
+  PerfectSphere* sphere2 = new PerfectSphere(this, {100, 0, 5}, 1);
+  world1->add_object(std::unique_ptr<Object>(sphere2));
+
+  worlds[0] = world1;
+  worlds[1] = world2;
+
+  tesseract = new Tesseract(this, worlds, {100, 0, 0}, 3);
 }
 
 // This function is called permanently at every new frame
@@ -94,33 +103,40 @@ void scene_structure::display_frame() {
     draw(global_frame, environment);
 
   // Update the objects
-  test_world->update();
+  for (auto world : worlds) {
+    if (world != nullptr) {
+      world->update();
+    }
+  }
   space_ship->update();
+  tesseract->update();
 
   // Display the objects
-  test_world->render();
   space_ship->render();
+  tesseract->render();
 
   // == Render transparent objects ==
 
   // Step 1: collect
-  std::vector<std::unique_ptr<Object>>& transparent_objects(
-      test_world->get_transparent_objects());
+  std::vector<Object*> transparent_objects;
+  World* world = tesseract->get_active_world();
+  if (world != nullptr) {
+    for (auto& object : world->get_transparent_objects()) {
+      transparent_objects.push_back(object.get());
+    }
+  }
   for (auto& ship_flame : space_ship->ship_flames) {
-    transparent_objects.push_back(std::unique_ptr<Object>(ship_flame->flare));
+    transparent_objects.push_back(ship_flame->flare);
   }
 
   // Step 2: sort
   // TODO: Render closer transparent objects first
   vec3 camera_position = camera_control.camera_model.position();
   std::sort(transparent_objects.begin(), transparent_objects.end(),
-            [&camera_position](const std::unique_ptr<Object>& a,
-                               const std::unique_ptr<Object>& b) {
+            [&camera_position](const Object* a, const Object* b) {
               return norm(a->get_position() - camera_position) >
                      norm(b->get_position() - camera_position);
             });
-
-  std::cout << transparent_objects[0].get()->get_position() << std::endl;
 
   // Step 3: render
   for (auto& object : transparent_objects) {
@@ -128,8 +144,13 @@ void scene_structure::display_frame() {
   }
 
   if (gui.display_wireframe) {
-    test_world->render_debug();
+    for (auto world : worlds) {
+      if (world != nullptr) {
+        world->render_debug();
+      }
+    }
     space_ship->render_debug();
+    tesseract->render_debug();
   }
 }
 

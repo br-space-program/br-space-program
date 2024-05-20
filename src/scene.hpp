@@ -6,6 +6,7 @@ struct scene_structure;
 #include "World.hpp"
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
+#include "objects/Tesseract.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
@@ -59,8 +60,9 @@ struct scene_structure : cgp::scene_inputs_generic {
   opengl_shader_structure shader_custom;
   opengl_shader_structure shader_glow;
 
-  World* test_world;
+  World* worlds[SIDES_COUNT];
   SpaceShip* space_ship;
+  Tesseract* tesseract;
 
   // ****************************** //
   // Functions
