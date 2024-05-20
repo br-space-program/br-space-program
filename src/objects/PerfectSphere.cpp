@@ -4,8 +4,11 @@
 
 using cgp::mesh_drawable;
 
-PerfectSphere::PerfectSphere(scene_structure* _scene) {
+PerfectSphere::PerfectSphere(scene_structure* _scene,
+                             vec3 _position,
+                             double _radius) {
   scene = _scene;
+  position = _position;
 
   /* Parameters */
   int Nu = 100;
@@ -17,12 +20,12 @@ PerfectSphere::PerfectSphere(scene_structure* _scene) {
   mesh shape = create_sphere_mesh(R, center, Nu, Nv);
 
   sphere.initialize_data_on_gpu(shape);
-  sphere.model.scaling = 3.0f;
-  sphere.material.color = {0.156f, 0.65f, 0.27f};
+  sphere.model.scaling = _radius;
+  sphere.material.color = {0.9f, 0.65f, 0.27f};
 }
 
 void PerfectSphere::update() {
-  sphere.model.translation = {0, 0, 0};
+  sphere.model.translation = position;
 }
 
 void PerfectSphere::render() {

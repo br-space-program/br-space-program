@@ -12,7 +12,7 @@ class PerfectSphere : public Object {
   mesh_drawable sphere;
 
  public:
-  PerfectSphere(scene_structure* _scene);
+  PerfectSphere(scene_structure* _scene, vec3 _position, double _radius);
   void update() override;
   void render() override;
   void render_debug() override;
