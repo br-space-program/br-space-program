@@ -1,6 +1,4 @@
 #include "World.hpp"
-#include <algorithm>
-#include <iostream>
 #include "scene.hpp"
 
 World::World(scene_structure* _scene) : scene(_scene) {}

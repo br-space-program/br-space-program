@@ -27,7 +27,7 @@ std::tuple<bool, double> ObjectWithHitbox::is_in_collision(
 
 void ObjectWithHitbox::collision_render_debug() {
   debug_sphere.model.translation = position;
-  std::cout << "Position: " << position << std::endl;
+  // std::cout << "Position: " << position << std::endl;
 
   // draw(debug_sphere, scene->environment);
 }
