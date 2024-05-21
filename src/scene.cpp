@@ -60,7 +60,7 @@ void scene_structure::initialize() {
   world1->add_object(std::unique_ptr<Object>(planet));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet));
 
-  Planet* planet2 = new Planet(this, *sun, {50, 10, 0}, 10);
+  Planet* planet2 = new Planet(this, *sun, {50, 10, 0}, 3);
   world1->add_celestial_body(std::unique_ptr<CelestialBody>(planet2));
   world1->add_object(std::unique_ptr<Object>(planet2));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2));

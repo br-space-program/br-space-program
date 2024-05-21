@@ -8,7 +8,7 @@ SimpleObject::SimpleObject(scene_structure* _scene) {
 
 void SimpleObject::render() {
   // Render the object
-  draw(mesh, scene->environment);
+  draw(*mesh_to_draw, scene->environment);
 }
 
 void SimpleObject::render_debug() {

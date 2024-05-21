@@ -34,6 +34,7 @@ class SpaceShipFlame {
                  vec3 _rotation_axis,
                  double _rotation_angle);
   void update();
+  void render();
 
   ~SpaceShipFlame() = default;
 

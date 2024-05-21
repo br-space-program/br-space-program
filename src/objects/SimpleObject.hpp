@@ -9,6 +9,7 @@ using cgp::mesh_drawable;
 class SimpleObject : public Object {
  public:
   mesh_drawable mesh;
+  mesh_drawable* mesh_to_draw = &mesh;
   scene_structure* scene;
 
   void set_position(vec3 _position);

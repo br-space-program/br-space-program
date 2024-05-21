@@ -105,10 +105,18 @@ void SpaceShipFlame::update() {
 
   // The global position is computed by the hierarchy
   // We then send it to flare for the transparency order
+  hierarchy->update_local_to_global_coordinates();
+
   affine_rts flare_pos =
       (*hierarchy)[name + "_flare"].drawable.hierarchy_transform_model;
 
   flare->set_position(flare_pos.translation);
+  flare->mesh_to_draw = &(*hierarchy)[name + "_flare"].drawable;
+}
+
+void SpaceShipFlame::render() {
+  draw((*hierarchy)[name].drawable, scene->environment);
+  draw((*hierarchy)[name + "_small"].drawable, scene->environment);
 }
 
 double flame_offset(double t) {

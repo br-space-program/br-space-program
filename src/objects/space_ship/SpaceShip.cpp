@@ -128,7 +128,6 @@ vec3 SpaceShip::compute_acceleration() {
       // position = body->get_position() +
       // normalize(direction) * body->get_radius() * 1.1;
       speed = BOUNCE_LOSS * reflect(speed, normalize(direction));
-      std::cout << "BOUNCE" << std::endl;
     }
   }
 
@@ -171,7 +170,11 @@ void SpaceShip::update() {
 
 void SpaceShip::render() {
   // Display the sphere
-  draw(hierarchy, scene->environment);
+  draw(hierarchy["ship"].drawable, scene->environment);
+
+  for (auto& ship_flame : ship_flames) {
+    ship_flame->render();
+  }
 }
 
 void SpaceShip::render_debug() {
