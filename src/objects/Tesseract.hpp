@@ -39,8 +39,10 @@ class Tesseract : public Object {
   bool is_inside_tesseract(vec3 const& p) const;
   void draw_world_through_interface(tesseract_side side);
   void draw_tesseract_content();
+  void draw_external_sides();
   void render_inside_tesseract();
   void render_outside_tesseract();
+  bool is_space_ship_looking_at_current_interface();
 
  public:
   Tesseract(scene_structure* _scene,

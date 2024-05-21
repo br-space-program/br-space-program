@@ -29,7 +29,11 @@ Tesseract::Tesseract(scene_structure* _scene,
                      World* _worlds[SIDES_COUNT],
                      vec3 _position,
                      double _scale)
-    : scene(_scene), position(_position), scale(_scale), frame_thickness(0.05) {
+    : scene(_scene),
+      position(_position),
+      scale(_scale),
+      frame_thickness(0.05),
+      current_world(SIDE_POS_Z) {
   for (int i = 0; i < SIDES_COUNT; i++) {
     worlds[i] = _worlds[i];
   }
@@ -267,22 +271,74 @@ void Tesseract::render_inside_tesseract() {
   glDisable(GL_STENCIL_TEST);
 }
 
+void Tesseract::draw_external_sides() {
+  for (int i = 0; i < SIDES_COUNT; i++) {
+    if (i == current_world) {
+      continue;
+    }
+
+    draw(box_sides[i], scene->environment);
+  }
+}
+
+bool Tesseract::is_space_ship_looking_at_current_interface() {
+  vec3 normal;
+  switch (current_world) {
+    case SIDE_POS_Z:
+      normal = vec3{0, 0, 1};
+      break;
+    case SIDE_NEG_Z:
+      normal = vec3{0, 0, -1};
+      break;
+    case SIDE_POS_Y:
+      normal = vec3{0, 1, 0};
+      break;
+    case SIDE_NEG_Y:
+      normal = vec3{0, -1, 0};
+      break;
+    case SIDE_POS_X:
+      normal = vec3{1, 0, 0};
+      break;
+    case SIDE_NEG_X:
+      normal = vec3{-1, 0, 0};
+      break;
+  }
+
+  vec3 center_interface = position + normal * 0.5f * scale;
+  vec3 camera_position = scene->camera_control.camera_model.position();
+
+  vec3 view_vector = camera_position - center_interface;
+
+  double scalar_product = cgp::dot(view_vector, normal);
+  return scalar_product > 0;
+}
+
 void Tesseract::render_outside_tesseract() {
   // Draw the current world
   if (worlds[current_world] != nullptr) {
     worlds[current_world]->render();
   }
 
-  draw(box_frame, scene->environment);
-
   glEnable(GL_STENCIL_TEST);
   glClear(GL_STENCIL_BUFFER_BIT);
-
   glStencilMask(0xFF);
 
+  bool render_external_sides_first =
+      !is_space_ship_looking_at_current_interface();
+
+  // Draw the external sides first
+  if (render_external_sides_first) {
+    glStencilFunc(GL_LEQUAL, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP);
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    draw(box_frame, scene->environment);
+    draw_external_sides();
+  }
+
   // Draw the box interface
-  glStencilFunc(GL_ALWAYS, 1, 0xFF);
-  glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+  glStencilFunc(GL_EQUAL, 0, 0xFF);
+  glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
   glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
   glDepthMask(GL_FALSE);
   draw(box_interfaces[current_world], scene->environment);
@@ -302,17 +358,27 @@ void Tesseract::render_outside_tesseract() {
     draw_world_through_interface((tesseract_side)i);
   }
 
-  // Draw the external sides
-  glStencilFunc(GL_EQUAL, 0, 0xFF);
-  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-  glDepthMask(GL_TRUE);
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-  for (int i = 0; i < SIDES_COUNT; i++) {
-    if (i == current_world) {
-      continue;
-    }
+  if (!render_external_sides_first) {
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    draw(box_frame, scene->environment);
+  }
 
-    draw(box_sides[i], scene->environment);
+  glStencilFunc(GL_ALWAYS, 1, 0xFF);
+  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+  glDepthMask(GL_TRUE);
+  draw(box_interfaces[current_world], scene->environment);
+
+  // Draw the external sides last
+  if (!render_external_sides_first) {
+    glStencilFunc(GL_LEQUAL, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP);
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    draw_external_sides();
   }
 
   glDepthMask(GL_TRUE);
