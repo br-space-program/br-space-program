@@ -10,6 +10,8 @@ void World::update() {
 }
 
 void World::render() {
+  scene->environment.uniform_generic.uniform_vec3["light"] = light_position;
+
   for (auto& object : objects) {
     object->render();
   }
@@ -55,4 +57,12 @@ std::vector<std::unique_ptr<ObjectWithHitbox>>& World::get_hitboxes() {
 
 std::vector<std::unique_ptr<Object>>& World::get_transparent_objects() {
   return transparent_objects;
+}
+
+void World::set_light_position(vec3 _position) {
+  light_position = _position;
+}
+
+vec3 World::get_light_position() const {
+  return light_position;
 }

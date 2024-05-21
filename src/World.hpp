@@ -13,6 +13,7 @@ class World {
   std::vector<std::unique_ptr<ObjectWithHitbox>> hitboxes;
   std::vector<std::unique_ptr<Object>>
       transparent_objects;  // Must be drawn after all other objects
+  vec3 light_position = {0, 0, 0};
 
  public:
   World(scene_structure* _scene);
@@ -30,4 +31,7 @@ class World {
   std::vector<std::unique_ptr<Object>>& get_objects();
   std::vector<std::unique_ptr<ObjectWithHitbox>>& get_hitboxes();
   std::vector<std::unique_ptr<Object>>& get_transparent_objects();
+
+  void set_light_position(vec3 _position);
+  vec3 get_light_position() const;
 };

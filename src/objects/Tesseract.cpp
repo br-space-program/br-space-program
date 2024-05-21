@@ -46,6 +46,14 @@ Tesseract::Tesseract(scene_structure* _scene,
   initialize_box_sides();
   initialize_box_interfaces();
   initialize_box_frame();
+
+  sphere.shader = scene->shader_custom;
+  for (int i = 0; i < SIDES_COUNT; i++) {
+    box_sides[i].shader = scene->shader_custom;
+  }
+  for (auto& frame_element : box_frame.elements) {
+    frame_element.drawable.shader = scene->shader_custom;
+  }
 }
 
 void Tesseract::initialize_box_sides() {
@@ -244,6 +252,8 @@ void Tesseract::draw_tesseract_content() {
 }
 
 void Tesseract::render_inside_tesseract() {
+  scene->environment.uniform_generic.uniform_vec3["light"] = position;
+
   draw(box_frame, scene->environment);
 
   draw_tesseract_content();
@@ -326,6 +336,8 @@ void Tesseract::render_outside_tesseract() {
   bool render_external_sides_first =
       !is_space_ship_looking_at_current_interface();
 
+  scene->environment.uniform_generic.uniform_vec3["light"] = position;
+
   // Draw the external sides first
   if (render_external_sides_first) {
     glStencilFunc(GL_LEQUAL, 0, 0xFF);
@@ -357,6 +369,8 @@ void Tesseract::render_outside_tesseract() {
 
     draw_world_through_interface((tesseract_side)i);
   }
+
+  scene->environment.uniform_generic.uniform_vec3["light"] = position;
 
   if (!render_external_sides_first) {
     glStencilFunc(GL_ALWAYS, 0, 0xFF);

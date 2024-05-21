@@ -170,6 +170,11 @@ void SpaceShip::update() {
 }
 
 void SpaceShip::render() {
+  World* world = scene->tesseract->get_active_world();
+  scene->environment.uniform_generic.uniform_vec3["light"] =
+      world == nullptr ? scene->tesseract->get_position()
+                       : world->get_light_position();
+
   // Display the sphere
   draw(hierarchy["ship"].drawable, scene->environment);
 

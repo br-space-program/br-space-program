@@ -57,6 +57,7 @@ void scene_structure::initialize() {
   world1->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
   world1->add_object(std::unique_ptr<Object>(sun));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
+  world1->set_light_position(sun->get_position());
 
   Planet* planet =
       new Planet(this, *sun, {100, 10, 0}, 1, {0.156f, 0.65f, 0.27f});
@@ -81,6 +82,7 @@ void scene_structure::initialize() {
 
   PerfectSphere* sphere = new PerfectSphere(this, {100, 5, -5}, 1);
   world2->add_object(std::unique_ptr<Object>(sphere));
+  world2->set_light_position(sphere->get_position());
 
   PerfectSphere* sphere2 = new PerfectSphere(this, {100, 0, 5}, 1);
   world2->add_object(std::unique_ptr<Object>(sphere2));
