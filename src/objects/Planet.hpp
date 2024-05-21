@@ -17,7 +17,8 @@ class Planet : public KeplerianBody {
   Planet(scene_structure* _scene,
          CelestialBody& _anchor,
          vec3 _position,
-         double _radius);
+         double _radius,
+         vec3 color);
   void update() override;
   void render() override;
   void render_debug() override;

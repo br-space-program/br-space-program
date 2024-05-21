@@ -8,7 +8,8 @@ using cgp::mesh_drawable;
 Planet::Planet(scene_structure* _scene,
                CelestialBody& _anchor,
                vec3 _position,
-               double radius)
+               double radius,
+               vec3 color)
     : KeplerianBody(_anchor,
                     _position,
                     PLANET_DENSITY * pow(radius, 3),
@@ -48,7 +49,7 @@ Planet::Planet(scene_structure* _scene,
 
   sphere.initialize_data_on_gpu(shape);
   sphere.model.scaling = 1.0f;
-  sphere.material.color = {0.156f, 0.65f, 0.27f};
+  sphere.material.color = color;
 
   sphere.vbo_position.update(shape.position);
   sphere.vbo_normal.update(shape.normal);
@@ -62,7 +63,7 @@ Planet::Planet(scene_structure* _scene,
 
   atmosphere->mesh.initialize_data_on_gpu(mesh_primitive_sphere(radius * 5));
   atmosphere->mesh.shader = scene->shader_glow;
-  atmosphere->mesh.material.color = {1, 1, 1};  // {0.01, 0.65, 0.99};
+  atmosphere->mesh.material.color = {1, 1, 1};
   atmosphere->mesh.material.alpha = 0.3;
 
   atmosphere->set_position(position);

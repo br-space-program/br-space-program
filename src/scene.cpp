@@ -48,6 +48,8 @@ void scene_structure::initialize() {
 
   space_ship = new SpaceShip(this);
 
+  // =/=/=/=/=/=/=/= WORLD 1 =/=/=/=/=/=/=/=
+
   World* world1 = new World(this);
 
   Sun* sun = new Sun(this);
@@ -55,12 +57,14 @@ void scene_structure::initialize() {
   world1->add_object(std::unique_ptr<Object>(sun));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
 
-  Planet* planet = new Planet(this, *sun, {100, 10, 0}, 1);
+  Planet* planet =
+      new Planet(this, *sun, {100, 10, 0}, 1, {0.156f, 0.65f, 0.27f});
   world1->add_celestial_body(std::unique_ptr<CelestialBody>(planet));
   world1->add_object(std::unique_ptr<Object>(planet));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet));
 
-  Planet* planet2 = new Planet(this, *sun, {50, 10, 0}, 3);
+  Planet* planet2 =
+      new Planet(this, *sun, {50, 10, 0}, 3, {0.914, 0.498, 0.373});
   world1->add_celestial_body(std::unique_ptr<CelestialBody>(planet2));
   world1->add_object(std::unique_ptr<Object>(planet2));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2));
@@ -70,13 +74,47 @@ void scene_structure::initialize() {
   world1->add_transparent_object(std::unique_ptr<Object>(planet->atmosphere));
   world1->add_transparent_object(std::unique_ptr<Object>(planet2->atmosphere));
 
+  // =/=/=/=/=/=/=/= WORLD 2 =/=/=/=/=/=/=/=
+
   World* world2 = new World(this);
 
   PerfectSphere* sphere = new PerfectSphere(this, {100, 5, -5}, 1);
   world2->add_object(std::unique_ptr<Object>(sphere));
 
   PerfectSphere* sphere2 = new PerfectSphere(this, {100, 0, 5}, 1);
-  world1->add_object(std::unique_ptr<Object>(sphere2));
+  world2->add_object(std::unique_ptr<Object>(sphere2));
+
+  world2->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
+  world2->add_object(std::unique_ptr<Object>(sun));
+  world2->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
+
+  Planet* planet_2 =
+      new Planet(this, *sun, {210, 10, 0}, 3, {0.592, 0.475, 0.212});
+  world2->add_celestial_body(std::unique_ptr<CelestialBody>(planet_2));
+  world2->add_object(std::unique_ptr<Object>(planet_2));
+  world2->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet_2));
+
+  Planet* planet2_2 =
+      new Planet(this, *sun, {67, 10, 0}, 5, {0.11, 0.149, 0.286});
+  world2->add_celestial_body(std::unique_ptr<CelestialBody>(planet2_2));
+  world2->add_object(std::unique_ptr<Object>(planet2_2));
+  world2->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2_2));
+
+  Planet* planet3_2 =
+      new Planet(this, *sun, {312, 10, 0}, 8, {0.486, 0.0, 0.812});
+  world2->add_celestial_body(std::unique_ptr<CelestialBody>(planet3_2));
+  world2->add_object(std::unique_ptr<Object>(planet3_2));
+  world2->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet3_2));
+
+  // === Atmospheres and glow ===
+  world2->add_transparent_object(std::unique_ptr<Object>(sun->atmosphere));
+  world2->add_transparent_object(std::unique_ptr<Object>(planet_2->atmosphere));
+  world2->add_transparent_object(
+      std::unique_ptr<Object>(planet2_2->atmosphere));
+  world2->add_transparent_object(
+      std::unique_ptr<Object>(planet3_2->atmosphere));
+
+  // =/=/=/=/=/=/=/= SET WORLDS =/=/=/=/=/=/=/=
 
   worlds[0] = world1;
   worlds[1] = world2;
