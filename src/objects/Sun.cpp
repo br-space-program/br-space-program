@@ -1,17 +1,22 @@
 #include "Sun.hpp"
 #include <cgp/cgp.hpp>
+#include "../constants.hpp"
 
 using cgp::mesh_drawable;
 
-Sun::Sun(scene_structure* _scene) : CelestialBody({0, 0, 0}, 42, 5) {
+Sun::Sun(scene_structure* _scene,
+         vec3 surface_color,
+         vec3 atmosphere_color,
+         vec3 position,
+         double radius)
+    : CelestialBody({0, 0, 0}, PLANET_DENSITY * pow(radius, 3), radius) {
   scene = _scene;
 
-  mesh sphere_mesh = mesh_primitive_sphere(5);
+  mesh sphere_mesh = mesh_primitive_sphere(radius);
 
   sphere.initialize_data_on_gpu(sphere_mesh);
-  sphere.model.translation = {0, 0, 0};
-  sphere.material.color = {
-      1, 0.87f, 0.48f};  // sphere will appear red (r,g,b components in [0,1])
+  sphere.model.translation = position;
+  sphere.material.color = surface_color;
 
   // Make it a light source
   sphere.material.phong.ambient = 1;
@@ -24,9 +29,8 @@ Sun::Sun(scene_structure* _scene) : CelestialBody({0, 0, 0}, 42, 5) {
   atmosphere = new SimpleObject(scene);
 
   atmosphere->mesh.initialize_data_on_gpu(sphere_mesh);
-  atmosphere->mesh.model.scaling =
-      3;  // coordinates are multiplied by 0.2 in the shader
-  atmosphere->mesh.material.color = {1, 0.87f, 0.48f};
+  atmosphere->mesh.model.scaling = 3;
+  atmosphere->mesh.material.color = atmosphere_color;
 
   // Make it a light source
   atmosphere->mesh.material.phong.ambient = 1;
@@ -36,7 +40,7 @@ Sun::Sun(scene_structure* _scene) : CelestialBody({0, 0, 0}, 42, 5) {
   // Add shader
   atmosphere->mesh.shader = scene->shader_glow;
 
-  atmosphere->set_position({0, 0, 0});
+  atmosphere->set_position(position);
   atmosphere->update();
 }
 

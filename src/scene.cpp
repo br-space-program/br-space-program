@@ -52,7 +52,8 @@ void scene_structure::initialize() {
 
   World* world1 = new World(this);
 
-  Sun* sun = new Sun(this);
+  Sun* sun = new Sun(this, {1, 0.87f, 0.48f}, {1, 0.87f, 0.48f}, {0, 0, 0}, 5);
+
   world1->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
   world1->add_object(std::unique_ptr<Object>(sun));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
@@ -114,10 +115,48 @@ void scene_structure::initialize() {
   world2->add_transparent_object(
       std::unique_ptr<Object>(planet3_2->atmosphere));
 
+  // =/=/=/=/=/=/=/= WORLD 3 =/=/=/=/=/=/=/=
+
+  World* world3 = new World(this);
+
+  Sun* giedi_prime = new Sun(this, {0, 0, 0}, {1, 1, 1}, {0, 0, 0}, 6);
+
+  world3->add_celestial_body(std::unique_ptr<CelestialBody>(giedi_prime));
+  world3->add_object(std::unique_ptr<Object>(giedi_prime));
+  world3->add_hitbox(std::unique_ptr<ObjectWithHitbox>(giedi_prime));
+
+  Planet* planet_3 =
+      new Planet(this, *giedi_prime, {210, 10, 0}, 3, {0.592, 0.475, 0.212});
+  world3->add_celestial_body(std::unique_ptr<CelestialBody>(planet_3));
+  world3->add_object(std::unique_ptr<Object>(planet_3));
+  world3->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet_3));
+
+  Planet* planet2_3 =
+      new Planet(this, *giedi_prime, {67, 10, 0}, 5, {0.11, 0.149, 0.286});
+  world3->add_celestial_body(std::unique_ptr<CelestialBody>(planet2_3));
+  world3->add_object(std::unique_ptr<Object>(planet2_3));
+  world3->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet2_3));
+
+  Planet* planet3_3 =
+      new Planet(this, *giedi_prime, {312, 10, 0}, 8, {0.486, 0.0, 0.812});
+  world3->add_celestial_body(std::unique_ptr<CelestialBody>(planet3_3));
+  world3->add_object(std::unique_ptr<Object>(planet3_3));
+  world3->add_hitbox(std::unique_ptr<ObjectWithHitbox>(planet3_3));
+
+  // === Atmospheres and glow ===
+  // world3->add_transparent_object(
+  //    std::unique_ptr<Object>(giedi_prime->atmosphere));
+  world3->add_transparent_object(std::unique_ptr<Object>(planet_3->atmosphere));
+  world3->add_transparent_object(
+      std::unique_ptr<Object>(planet2_2->atmosphere));
+  world3->add_transparent_object(
+      std::unique_ptr<Object>(planet3_2->atmosphere));
+
   // =/=/=/=/=/=/=/= SET WORLDS =/=/=/=/=/=/=/=
 
   worlds[0] = world1;
   worlds[1] = world2;
+  worlds[2] = world3;
 
   tesseract = new Tesseract(this, worlds, {100, 0, 0}, 3);
 }
