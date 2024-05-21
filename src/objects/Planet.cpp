@@ -63,6 +63,7 @@ Planet::Planet(scene_structure* _scene,
   atmosphere->mesh.initialize_data_on_gpu(mesh_primitive_sphere(radius * 5));
   atmosphere->mesh.shader = scene->shader_glow;
   atmosphere->mesh.material.color = {1, 1, 1};  // {0.01, 0.65, 0.99};
+  atmosphere->mesh.material.alpha = 0.3;
 
   atmosphere->set_position(position);
 }

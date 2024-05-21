@@ -53,7 +53,7 @@ void main()
 	fragment.normal   = normal.xyz;
 	fragment.color = vertex_color;
 	fragment.uv = vertex_uv;
-    fragment.glow_transparency = glow_transparency;
+    fragment.glow_transparency = max(0, min(1, pow(glow_transparency, 10.0f)));
 
 
 	// gl_Position is a built-in variable which is the expected output of the vertex shader
