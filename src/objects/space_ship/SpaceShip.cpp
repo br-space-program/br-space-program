@@ -278,8 +278,40 @@ void SpaceShip::action_keyboard() {
   } else {
     ship_flame_right_down->off();
   }
+
+  // Stop rotation with space
+  if (scene->inputs.keyboard.is_pressed(GLFW_KEY_SPACE)) {
+    if (abs(speed_rotation_z) < 0.01) {
+      speed_rotation_z = 0;
+
+      ship_flame_left_up->off();
+      ship_flame_right_down->off();
+    } else {
+      speed_rotation_z += SPEED * sign(speed_rotation_z) * -1;
+
+      if (speed_rotation_z > 0) {
+        ship_flame_left_up->on();
+        ship_flame_right_down->on();
+      }
+
+      if (speed_rotation_z < 0) {
+        ship_flame_left_down->on();
+        ship_flame_right_up->on();
+      }
+    }
+  }
 }
 
 vec3 reflect(vec3 to_reflect, vec3 normal) {
   return to_reflect - 2 * dot(to_reflect, normal) * normal;
+}
+
+int sign(double x) {
+  if (x > 0) {
+    return 1;
+  } else if (x < 0) {
+    return -1;
+  } else {
+    return 0;
+  }
 }

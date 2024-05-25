@@ -50,3 +50,5 @@ class SpaceShip : public ObjectWithHitbox {
  * Returns the vector `to_reflect` reflected based on vector `normal`.
  */
 vec3 reflect(vec3 to_reflect, vec3 normal);
+
+int sign(double x);
