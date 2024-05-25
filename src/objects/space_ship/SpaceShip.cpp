@@ -7,6 +7,7 @@ using cgp::mesh_drawable;
 // Difference between the position of the center of rotation of camera and the
 // spaceship
 double SPEED = 0.1;
+double ROTATION_SPEED = 0.03;
 
 SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   scene = _scene;
@@ -231,7 +232,7 @@ void SpaceShip::action_keyboard() {
 
   // Rotation
   if (scene->inputs.keyboard.is_pressed('a')) {
-    speed_rotation_z += SPEED;
+    speed_rotation_z += ROTATION_SPEED;
     ship_flame_right_up->on();
     ship_flame_left_down->on();
   } else {
@@ -240,7 +241,7 @@ void SpaceShip::action_keyboard() {
   }
 
   if (scene->inputs.keyboard.is_pressed('e')) {
-    speed_rotation_z -= SPEED;
+    speed_rotation_z -= ROTATION_SPEED;
     ship_flame_left_up->on();
     ship_flame_right_down->on();
   } else {
@@ -281,13 +282,13 @@ void SpaceShip::action_keyboard() {
 
   // Stop rotation with space
   if (scene->inputs.keyboard.is_pressed(GLFW_KEY_SPACE)) {
-    if (abs(speed_rotation_z) < 0.01) {
+    if (abs(speed_rotation_z) < 0.1) {
       speed_rotation_z = 0;
 
       ship_flame_left_up->off();
       ship_flame_right_down->off();
     } else {
-      speed_rotation_z += SPEED * sign(speed_rotation_z) * -1;
+      speed_rotation_z += 5 * ROTATION_SPEED * sign(speed_rotation_z) * -1;
 
       if (speed_rotation_z > 0) {
         ship_flame_left_up->on();
