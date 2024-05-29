@@ -20,6 +20,7 @@ class World {
 
   void update();
   void render();
+  void render_transparent(bool include_spaceship);
   void render_debug();
 
   void add_celestial_body(std::unique_ptr<CelestialBody> body);

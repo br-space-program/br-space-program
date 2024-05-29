@@ -194,34 +194,6 @@ void scene_structure::display_frame() {
   space_ship->render();
   tesseract->render();
 
-  // == Render transparent objects ==
-
-  // Step 1: collect
-  std::vector<Object*> transparent_objects;
-  World* world = tesseract->get_active_world();
-  if (world != nullptr) {
-    for (auto& object : world->get_transparent_objects()) {
-      transparent_objects.push_back(object.get());
-    }
-  }
-  for (auto& ship_flame : space_ship->ship_flames) {
-    transparent_objects.push_back(ship_flame->flare);
-  }
-
-  // Step 2: sort
-  // TODO: Render closer transparent objects first
-  vec3 camera_position = camera_control.camera_model.position();
-  std::sort(transparent_objects.begin(), transparent_objects.end(),
-            [&camera_position](const Object* a, const Object* b) {
-              return norm(a->get_position() - camera_position) >
-                     norm(b->get_position() - camera_position);
-            });
-
-  // Step 3: render
-  for (auto& object : transparent_objects) {
-    object->render();
-  }
-
   if (gui.display_wireframe) {
     for (auto world : worlds) {
       if (world != nullptr) {

@@ -239,6 +239,7 @@ void Tesseract::draw_world_through_interface(tesseract_side side) {
   glDepthMask(GL_TRUE);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   worlds[side]->render();
+  worlds[side]->render_transparent(false);
 
   glStencilFunc(GL_EQUAL, 2, 0xFF);
   glStencilOp(GL_KEEP, GL_DECR, GL_DECR);
@@ -324,17 +325,15 @@ bool Tesseract::is_space_ship_looking_at_current_interface() {
 }
 
 void Tesseract::render_outside_tesseract() {
-  // Draw the current world
-  if (worlds[current_world] != nullptr) {
-    worlds[current_world]->render();
-  }
-
   glEnable(GL_STENCIL_TEST);
   glClear(GL_STENCIL_BUFFER_BIT);
   glStencilMask(0xFF);
 
   bool render_external_sides_first =
       !is_space_ship_looking_at_current_interface();
+
+  std::cout << "Is spaceship looking at current interface? "
+            << render_external_sides_first << std::endl;
 
   scene->environment.uniform_generic.uniform_vec3["light"] = position;
 
@@ -398,6 +397,12 @@ void Tesseract::render_outside_tesseract() {
   glDepthMask(GL_TRUE);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   glDisable(GL_STENCIL_TEST);
+
+  // Draw the current world
+  if (worlds[current_world] != nullptr) {
+    worlds[current_world]->render();
+    worlds[current_world]->render_transparent(true);
+  }
 }
 
 void Tesseract::render() {

@@ -17,6 +17,32 @@ void World::render() {
   }
 }
 
+void World::render_transparent(bool include_spaceship) {
+  // Step 1: collect
+  std::vector<Object*> target_objects;
+  for (auto& object : transparent_objects) {
+    target_objects.push_back(object.get());
+  }
+  if (include_spaceship) {
+    for (auto& ship_flame : scene->space_ship->ship_flames) {
+      target_objects.push_back((Object*)ship_flame->flare);
+    }
+  }
+
+  // Step 2: sort
+  vec3 camera_position = scene->camera_control.camera_model.position();
+  std::sort(target_objects.begin(), target_objects.end(),
+            [&camera_position](const Object* a, const Object* b) {
+              return norm(a->get_position() - camera_position) >
+                     norm(b->get_position() - camera_position);
+            });
+
+  // Step 3: render
+  for (auto& object : target_objects) {
+    object->render();
+  }
+}
+
 void World::render_debug() {
   for (auto& object : objects) {
     object->render_debug();
