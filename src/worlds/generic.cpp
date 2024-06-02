@@ -7,6 +7,8 @@
 World* create_world_generic1(scene_structure* scene, vec3 p0) {
   World* world = new World(scene);
 
+  world->set_skybox(project::path + "assets/skybox.png");
+
   Sun* sun = new Sun(scene, RGB(256, 223, 123), RGB(256, 223, 123), p0, 75);
   world->add_object(std::unique_ptr<Object>(sun));
   world->add_celestial_body(std::unique_ptr<CelestialBody>(sun));

@@ -22,18 +22,6 @@ void scene_structure::initialize() {
 
   display_info();
 
-  // Load the skybox
-  image_structure image_skybox =
-      image_load_file(project::path + "assets/skybox.png");
-
-  std::vector<image_structure> image_skybox_grid =
-      image_split_grid(image_skybox, 4, 3);
-
-  skybox.initialize_data_on_gpu();
-  skybox.texture.initialize_cubemap_on_gpu(
-      image_skybox_grid[1], image_skybox_grid[7], image_skybox_grid[5],
-      image_skybox_grid[3], image_skybox_grid[10], image_skybox_grid[4]);
-
   // Load the custom shader
   shader_custom.load(
       project::path + "shaders/shading_custom/shading_custom.vert.glsl",
@@ -67,9 +55,6 @@ void scene_structure::display_frame() {
 
   //  Must be called before drawing the other shapes and without writing in the
   //  Depth Buffer
-  glDepthMask(GL_FALSE);  // disable depth-buffer writing
-  draw(skybox, environment);
-  glDepthMask(GL_TRUE);  // re-activate depth-buffer write
 
   // conditional display of the global frame (set via the GUI)
   if (gui.display_frame)
@@ -85,7 +70,6 @@ void scene_structure::display_frame() {
   tesseract->update();
 
   // Display the objects
-  space_ship->render();
   tesseract->render();
 
   if (gui.display_wireframe) {

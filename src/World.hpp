@@ -14,12 +14,13 @@ class World {
   std::vector<std::unique_ptr<Object>>
       transparent_objects;  // Must be drawn after all other objects
   vec3 light_position = {0, 0, 0};
+  cgp::skybox_drawable skybox;
 
  public:
   World(scene_structure* _scene);
 
   void update();
-  void render();
+  void render(bool include_spaceship);
   void render_transparent(bool include_spaceship);
   void render_debug();
 
@@ -35,4 +36,6 @@ class World {
 
   void set_light_position(vec3 _position);
   vec3 get_light_position() const;
+
+  void set_skybox(const std::string& filepath);
 };

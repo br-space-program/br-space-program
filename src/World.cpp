@@ -9,11 +9,19 @@ void World::update() {
   }
 }
 
-void World::render() {
+void World::render(bool include_spaceship) {
   scene->environment.uniform_generic.uniform_vec3["light"] = light_position;
+
+  glDepthMask(GL_FALSE);
+  draw(skybox, scene->environment);
+  glDepthMask(GL_TRUE);
 
   for (auto& object : objects) {
     object->render();
+  }
+
+  if (include_spaceship) {
+    scene->space_ship->render();
   }
 }
 
@@ -91,4 +99,16 @@ void World::set_light_position(vec3 _position) {
 
 vec3 World::get_light_position() const {
   return light_position;
+}
+
+void World::set_skybox(const std::string& filepath) {
+  image_structure image_skybox = image_load_file(filepath);
+
+  std::vector<image_structure> image_skybox_grid =
+      image_split_grid(image_skybox, 4, 3);
+
+  skybox.initialize_data_on_gpu();
+  skybox.texture.initialize_cubemap_on_gpu(
+      image_skybox_grid[1], image_skybox_grid[7], image_skybox_grid[5],
+      image_skybox_grid[3], image_skybox_grid[10], image_skybox_grid[4]);
 }
