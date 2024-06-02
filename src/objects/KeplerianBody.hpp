@@ -8,6 +8,8 @@ using cgp::vec3;
 class KeplerianBody : public CelestialBody {
  private:
   CelestialBody* anchor;
+  vec3 u0;
+  double theta = 0;
 
  public:
   KeplerianBody(CelestialBody& _anchor,

@@ -18,16 +18,19 @@ KeplerianBody::KeplerianBody(CelestialBody& _anchor,
 void KeplerianBody::update() {
   double dt = 1.0 / 60.0;
   double G = 100;
-  double a = cgp::norm(position - anchor->get_position());
+  double a = cgp::norm(u0);
   double dTheta = std::sqrt(G * anchor->get_mass() / std::pow(a, 3)) * dt;
+  theta += dTheta;
 
-  mat3 R = mat3::build_rotation_from_axis_angle({0, 0, 1}, dTheta);
+  mat3 R = mat3::build_rotation_from_axis_angle({0, 0, 1}, theta);
 
-  position = R * (position - anchor->get_position()) + anchor->get_position();
+  position = R * u0 + anchor->get_position();
 }
 
 void KeplerianBody::set_anchor(CelestialBody& _anchor) {
   anchor = &_anchor;
+  u0 = position - anchor->get_position();
+  theta = 0;
 }
 
 CelestialBody* KeplerianBody::get_anchor() const {
