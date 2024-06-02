@@ -287,7 +287,7 @@ void SpaceShip::action_keyboard() {
 
   // Stop rotation with space
   if (scene->inputs.keyboard.is_pressed(GLFW_KEY_SPACE)) {
-    if (abs(speed_rotation_z) < 0.1) {
+    if (cgp::abs(speed_rotation_z) < 0.1) {
       speed_rotation_z = 0;
 
       ship_flame_left_up->off();

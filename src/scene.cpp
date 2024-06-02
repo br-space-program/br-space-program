@@ -53,7 +53,6 @@ void scene_structure::initialize() {
   World* world1 = new World(this);
 
   Sun* sun = new Sun(this, {1, 0.87f, 0.48f}, {1, 0.87f, 0.48f}, {0, 0, 0}, 5);
-
   world1->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
   world1->add_object(std::unique_ptr<Object>(sun));
   world1->add_hitbox(std::unique_ptr<ObjectWithHitbox>(sun));
