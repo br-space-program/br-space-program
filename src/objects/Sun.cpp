@@ -9,7 +9,7 @@ Sun::Sun(scene_structure* _scene,
          vec3 atmosphere_color,
          vec3 position,
          double radius)
-    : CelestialBody({0, 0, 0}, PLANET_DENSITY * pow(radius, 3), radius) {
+    : CelestialBody(position, STAR_DENSITY * pow(radius, 3), radius) {
   scene = _scene;
 
   mesh sphere_mesh = mesh_primitive_sphere(radius);

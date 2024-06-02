@@ -12,7 +12,7 @@ KeplerianBody::KeplerianBody(CelestialBody& _anchor,
                              double _radius)
     : CelestialBody(_position, _mass, _radius) {
   set_anchor(_anchor);
-  position.z = 0;
+  position.z = anchor->get_position().z;
 }
 
 void KeplerianBody::update() {
