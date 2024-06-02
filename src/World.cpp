@@ -9,7 +9,7 @@ void World::update() {
   }
 }
 
-void World::render(bool include_spaceship) {
+void World::render() {
   scene->environment.uniform_generic.uniform_vec3["light"] = light_position;
 
   glDepthMask(GL_FALSE);
@@ -18,10 +18,6 @@ void World::render(bool include_spaceship) {
 
   for (auto& object : objects) {
     object->render();
-  }
-
-  if (include_spaceship) {
-    scene->space_ship->render();
   }
 }
 

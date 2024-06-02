@@ -20,7 +20,7 @@ class World {
   World(scene_structure* _scene);
 
   void update();
-  void render(bool include_spaceship);
+  void render();
   void render_transparent(bool include_spaceship);
   void render_debug();
 

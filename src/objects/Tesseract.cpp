@@ -256,7 +256,7 @@ void Tesseract::draw_world_through_interface(tesseract_side side) {
   glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
   glDepthMask(GL_TRUE);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-  worlds[side]->render(false);
+  worlds[side]->render();
   worlds[side]->render_transparent(false);
 
   glStencilFunc(GL_EQUAL, 2, 0xFF);
@@ -268,15 +268,12 @@ void Tesseract::draw_world_through_interface(tesseract_side side) {
 
 void Tesseract::draw_tesseract_content() {
   draw(sphere, scene->environment);
-  scene->space_ship->render();
 }
 
 void Tesseract::render_inside_tesseract() {
   scene->environment.uniform_generic.uniform_vec3["light"] = position;
 
   draw(box_frame, scene->environment);
-
-  draw_tesseract_content();
 
   glEnable(GL_STENCIL_TEST);
   glClear(GL_STENCIL_BUFFER_BIT);
@@ -299,6 +296,9 @@ void Tesseract::render_inside_tesseract() {
   glDepthMask(GL_TRUE);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   glDisable(GL_STENCIL_TEST);
+
+  draw_tesseract_content();
+  scene->space_ship->render();
 }
 
 void Tesseract::draw_external_sides() {
@@ -324,14 +324,15 @@ bool Tesseract::is_space_ship_looking_at_current_interface() {
 }
 
 void Tesseract::render_outside_tesseract() {
+  // Draw the current world
+  World* world = worlds[current_world];
+  if (world != nullptr) {
+    world->render();
+  }
+
   glEnable(GL_STENCIL_TEST);
   glClear(GL_STENCIL_BUFFER_BIT);
   glStencilMask(0xFF);
-
-  // Draw the current world
-  if (worlds[current_world] != nullptr) {
-    worlds[current_world]->render(true);
-  }
 
   bool render_external_sides_first =
       !is_space_ship_looking_at_current_interface();
@@ -358,12 +359,6 @@ void Tesseract::render_outside_tesseract() {
   glDepthMask(GL_FALSE);
   draw(box_interfaces[current_world], scene->environment);
 
-  glStencilFunc(GL_EQUAL, 1, 0xFF);
-  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-  glDepthMask(GL_TRUE);
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-  draw_tesseract_content();
-
   // Draw other worlds
   for (int i = 0; i < SIDES_COUNT; i++) {
     if (i == current_world) {
@@ -372,6 +367,19 @@ void Tesseract::render_outside_tesseract() {
 
     draw_world_through_interface((tesseract_side)i);
   }
+
+  glStencilFunc(GL_EQUAL, 1, 0xFF);
+  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+  glDepthMask(GL_TRUE);
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  draw_tesseract_content();
+
+  glDisable(GL_STENCIL_TEST);
+  glDepthMask(GL_TRUE);
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  scene->environment.uniform_generic.uniform_vec3["light"] = position;
+  scene->space_ship->render();
+  glEnable(GL_STENCIL_TEST);
 
   scene->environment.uniform_generic.uniform_vec3["light"] = position;
 
