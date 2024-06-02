@@ -337,8 +337,8 @@ void Tesseract::render_outside_tesseract() {
   bool render_external_sides_first =
       !is_space_ship_looking_at_current_interface();
 
-  std::cout << "Is spaceship looking at current interface? "
-            << render_external_sides_first << std::endl;
+  // std::cout << "Is spaceship looking at current interface? "
+  //           << render_external_sides_first << std::endl;
 
   scene->environment.uniform_generic.uniform_vec3["light"] = position;
 
