@@ -3,6 +3,8 @@
 #include "../World.hpp"
 #include "../mesh/primitives.hpp"
 #include "../scene.hpp"
+#include "../utils/rgb.hpp"
+#include "../utils/uvector.hpp"
 
 using cgp::mesh_drawable;
 
@@ -23,6 +25,26 @@ mesh mesh_primitive_cuboid(vec3 const& p000, vec3 const& p111) {
   shape.push_back(mesh_primitive_quadrangle(p100, p000, p010, p110));
 
   return shape;
+}
+
+vec3 get_side_normal(tesseract_side side) {
+  switch (side) {
+    case SIDE_POS_Z:
+      return vec3{0, 0, 1};
+    case SIDE_NEG_Z:
+      return vec3{0, 0, -1};
+    case SIDE_POS_Y:
+      return vec3{0, 1, 0};
+    case SIDE_NEG_Y:
+      return vec3{0, -1, 0};
+    case SIDE_POS_X:
+      return vec3{1, 0, 0};
+    case SIDE_NEG_X:
+      return vec3{-1, 0, 0};
+  }
+
+  std::cerr << "Invalid side " << side << std::endl;
+  exit(1);
 }
 
 Tesseract::Tesseract(scene_structure* _scene,
@@ -87,27 +109,14 @@ void Tesseract::initialize_box_sides() {
 }
 
 void Tesseract::initialize_box_interfaces() {
-  mesh box_interface_xy_mesh = mesh_primitive_quadrangle(
-      {-0.5f + frame_thickness, -0.5f + frame_thickness,
-       0.5f - frame_thickness},
-      {0.5f - frame_thickness, -0.5f + frame_thickness, 0.5f - frame_thickness},
-      {0.5f - frame_thickness, 0.5f - frame_thickness, 0.5f - frame_thickness},
-      {-0.5f + frame_thickness, 0.5f - frame_thickness,
-       0.5f - frame_thickness});
-  mesh box_interface_xz_mesh = mesh_primitive_quadrangle(
-      {-0.5f + frame_thickness, 0.5f - frame_thickness,
-       -0.5f + frame_thickness},
-      {0.5f - frame_thickness, 0.5f - frame_thickness, -0.5f + frame_thickness},
-      {0.5f - frame_thickness, 0.5f - frame_thickness, 0.5f - frame_thickness},
-      {-0.5f + frame_thickness, 0.5f - frame_thickness,
-       0.5f - frame_thickness});
-  mesh box_interface_yz_mesh = mesh_primitive_quadrangle(
-      {0.5f - frame_thickness, -0.5f + frame_thickness,
-       -0.5f + frame_thickness},
-      {0.5f - frame_thickness, 0.5f - frame_thickness, -0.5f + frame_thickness},
-      {0.5f - frame_thickness, 0.5f - frame_thickness, 0.5f - frame_thickness},
-      {0.5f - frame_thickness, -0.5f + frame_thickness,
-       0.5f - frame_thickness});
+  double u = 0.5f - frame_thickness;
+
+  mesh box_interface_xy_mesh =
+      mesh_primitive_quadrangle({-u, -u, 0}, {u, -u, 0}, {u, u, 0}, {-u, u, 0});
+  mesh box_interface_xz_mesh =
+      mesh_primitive_quadrangle({-u, 0, -u}, {u, 0, -u}, {u, 0, u}, {-u, 0, u});
+  mesh box_interface_yz_mesh =
+      mesh_primitive_quadrangle({0, -u, -u}, {0, u, -u}, {0, u, u}, {0, -u, u});
 
   for (int i = 0; i < SIDES_COUNT; i++) {
     mesh& box_interface_mesh = box_interface_xy_mesh;
@@ -128,7 +137,7 @@ void Tesseract::initialize_box_interfaces() {
     }
 
     box_interfaces[i].initialize_data_on_gpu(box_interface_mesh);
-    box_interfaces[i].material.color = {1.0f, 0.286f, 1.0f};
+    box_interfaces[i].material.color = RGB(255, 73, 255);
     box_interfaces[i].model.scaling = scale;
   }
 }
@@ -139,7 +148,7 @@ void Tesseract::initialize_box_frame() {
       {-frame_thickness, -frame_thickness, -frame_thickness},
       {frame_thickness, frame_thickness, 1.f + frame_thickness});
   frame_part.initialize_data_on_gpu(frame_part_mesh);
-  frame_part.material.color = {1.0f, 1.0f, 1.0f};
+  frame_part.material.color = RGB(255, 255, 255);
   frame_part.model.scaling = 1.0f;
 
   box_frame.add(frame_root, "root");
@@ -168,8 +177,7 @@ void Tesseract::initialize_box_frame() {
 bool Tesseract::is_inside_tesseract(vec3 const& p) const {
   const vec3 a = (p - position) / scale;
 
-  return std::abs(a.x) <= 0.5 && std::abs(a.y) <= 0.5 && -0.5 <= a.z &&
-         a.z <= 0.5 - frame_thickness;
+  return std::abs(a.x) <= 0.5 && std::abs(a.y) <= 0.5 && std::abs(a.z) <= 0.5;
 }
 
 void Tesseract::update() {
@@ -180,16 +188,26 @@ void Tesseract::update() {
   box_sides[SIDE_POS_X].model.translation = position;
   box_sides[SIDE_NEG_X].model.translation = position;
 
-  double interface_unit_size = 1.0f - 2 * frame_thickness;
-  box_interfaces[SIDE_POS_Z].model.translation = position;
+  double interface_unit_size = (0.5f + frame_thickness) * scale;
+  box_interfaces[SIDE_POS_Z].model.translation =
+      position + interface_unit_size * uz;
   box_interfaces[SIDE_NEG_Z].model.translation =
-      position - vec3{0, 0, interface_unit_size} * scale;
-  box_interfaces[SIDE_POS_Y].model.translation = position;
+      position - interface_unit_size * uz;
+  box_interfaces[SIDE_POS_Y].model.translation =
+      position + interface_unit_size * uy;
   box_interfaces[SIDE_NEG_Y].model.translation =
-      position - vec3{0, interface_unit_size, 0} * scale;
-  box_interfaces[SIDE_POS_X].model.translation = position;
+      position - interface_unit_size * uy;
+  box_interfaces[SIDE_POS_X].model.translation =
+      position + interface_unit_size * ux;
   box_interfaces[SIDE_NEG_X].model.translation =
-      position - vec3{interface_unit_size, 0, 0} * scale;
+      position - interface_unit_size * ux;
+
+  vec3 camera_position = scene->camera_control.camera_model.position();
+  bool outside = !is_inside_tesseract(camera_position);
+  if (outside) {
+    box_interfaces[current_world].model.translation =
+        (0.5f - frame_thickness) * scale * get_side_normal(current_world);
+  }
 
   sphere.model.translation = position;
   box_frame["root"].transform_local.translation = position;
@@ -294,27 +312,7 @@ void Tesseract::draw_external_sides() {
 }
 
 bool Tesseract::is_space_ship_looking_at_current_interface() {
-  vec3 normal;
-  switch (current_world) {
-    case SIDE_POS_Z:
-      normal = vec3{0, 0, 1};
-      break;
-    case SIDE_NEG_Z:
-      normal = vec3{0, 0, -1};
-      break;
-    case SIDE_POS_Y:
-      normal = vec3{0, 1, 0};
-      break;
-    case SIDE_NEG_Y:
-      normal = vec3{0, -1, 0};
-      break;
-    case SIDE_POS_X:
-      normal = vec3{1, 0, 0};
-      break;
-    case SIDE_NEG_X:
-      normal = vec3{-1, 0, 0};
-      break;
-  }
+  vec3 normal = get_side_normal(current_world);
 
   vec3 center_interface = position + normal * 0.5f * scale;
   vec3 camera_position = scene->camera_control.camera_model.position();
@@ -411,7 +409,8 @@ void Tesseract::render_outside_tesseract() {
 }
 
 void Tesseract::render() {
-  bool outside = !is_inside_tesseract(scene->space_ship->get_position());
+  vec3 camera_position = scene->camera_control.camera_model.position();
+  bool outside = !is_inside_tesseract(camera_position);
 
   // std::cout << "Is spaceship outside tesseract? " << outside << std::endl;
 
