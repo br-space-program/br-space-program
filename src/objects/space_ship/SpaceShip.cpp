@@ -11,7 +11,7 @@ double ROTATION_SPEED = 0.03;
 
 SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   scene = _scene;
-  position = {100, 0, 0};
+  position = {0, 0, 0};
   speed = {0, 0, 0};
   rotation_z = 0;
   speed_rotation_z = 0;
@@ -119,9 +119,6 @@ vec3 SpaceShip::compute_acceleration() {
     ObjectWithHitbox* body = hitboxes[i].get();
 
     auto [is_collision, distance] = body->is_in_collision(*this);
-
-    // std::cout << "Collision: " << is_collision << " Distance: " << distance
-    //         << std::endl;
 
     if (is_collision) {
       acceleration = vec3({0, 0, 0});
