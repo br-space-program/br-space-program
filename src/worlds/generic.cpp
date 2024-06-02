@@ -42,6 +42,8 @@ World* create_world_generic1(scene_structure* scene, vec3 p0) {
 World* create_world_generic2(scene_structure* scene, vec3 p0) {
   World* world = new World(scene);
 
+  world->set_skybox(project::path + "assets/skybox.png");
+
   Sun* sun = new Sun(scene, RGB(57, 76, 211), RGB(0, 175, 207), p0, 150);
   world->add_object(std::unique_ptr<Object>(sun));
   world->add_celestial_body(std::unique_ptr<CelestialBody>(sun));
@@ -75,5 +77,11 @@ World* create_world_generic2(scene_structure* scene, vec3 p0) {
   world->add_object(std::unique_ptr<Object>(moon2));
   world->add_hitbox(std::unique_ptr<ObjectWithHitbox>(moon2));
 
+  return world;
+}
+
+World* create_world_empty(scene_structure* scene) {
+  World* world = new World(scene);
+  world->set_skybox(project::path + "assets/skybox.png");
   return world;
 }
