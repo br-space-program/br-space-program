@@ -1,7 +1,7 @@
 #include "SpaceShip.hpp"
 #include <cgp/cgp.hpp>
 #include "../../constants.hpp"
-#include "../utils/physics.hpp"
+#include "../../utils/physics.hpp"
 
 using cgp::mesh_drawable;
 
@@ -126,7 +126,7 @@ vec3 SpaceShip::compute_acceleration() {
 }
 
 void SpaceShip::update() {
-  double dt = 1.0 / 60.0;
+  double dt = scene->dt;
   vec3 acceleration = compute_acceleration();
   speed += acceleration * dt;
   position += speed * dt;

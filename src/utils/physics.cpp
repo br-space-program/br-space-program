@@ -1,5 +1,5 @@
-#include "gravity.hpp"
-#include "../../constants.hpp"
+#include "physics.hpp"
+#include "../constants.hpp"
 
 vec3 compute_gravitional_force(
     const cgp::vec3& position,

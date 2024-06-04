@@ -14,6 +14,8 @@ using namespace std;
 // This function is called only once at the beginning of the program
 // This function can contain any complex operation that can be pre-computed once
 void scene_structure::initialize() {
+  dt = (1.0f / 60.0f);
+
   environment.background_color = {0, 0, 0};
   // Set the behavior of the camera and its initial position
   // ********************************************** //
@@ -93,6 +95,7 @@ void scene_structure::display_gui() {
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
   ImGui::Checkbox("Debug Movements", &debug_movements);
   ImGui::Checkbox("Locked camera", &space_ship->camera_locked);
+  ImGui::SliderFloat("Time step", &dt, 1.f / 500, 1.f / 24);
 }
 
 void scene_structure::mouse_move_event() {

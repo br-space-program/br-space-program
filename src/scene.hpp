@@ -56,6 +56,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 
   timer_basic timer;
 
+  float dt;
+
   opengl_shader_structure shader_custom;
   opengl_shader_structure shader_glow;
 

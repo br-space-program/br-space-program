@@ -7,13 +7,15 @@ using cgp::vec3;
 
 class KeplerianBody : public CelestialBody {
  private:
+ scene_structure* scene;
   CelestialBody* anchor;
   vec3 u0;
   vec3 normal;
   double theta = 0;
 
  public:
-  KeplerianBody(CelestialBody& _anchor,
+  KeplerianBody(scene_structure* _scene,
+  CelestialBody& _anchor,
                 vec3 _position,
                 double _mass,
                 double _radius);
