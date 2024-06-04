@@ -38,4 +38,5 @@ class World {
   vec3 get_light_position() const;
 
   void set_skybox(const std::string& filepath);
+  void set_skybox(const std::string& prefix, const std::string& suffix);
 };

@@ -7,7 +7,7 @@
 World* create_world_generic1(scene_structure* scene, vec3 p0) {
   World* world = new World(scene);
 
-  world->set_skybox(project::path + "assets/skybox.png");
+  world->set_skybox(project::path + "assets/skybox/", ".png");
 
   Sun* sun = new Sun(scene, RGB(256, 223, 123), RGB(256, 223, 123), p0, 75);
   world->add_object(std::unique_ptr<Object>(sun));
@@ -42,7 +42,7 @@ World* create_world_generic1(scene_structure* scene, vec3 p0) {
 World* create_world_generic2(scene_structure* scene, vec3 p0) {
   World* world = new World(scene);
 
-  world->set_skybox(project::path + "assets/skybox.png");
+  world->set_skybox(project::path + "assets/skybox/", ".png");
 
   Sun* sun = new Sun(scene, RGB(57, 76, 211), RGB(0, 175, 207), p0, 150);
   world->add_object(std::unique_ptr<Object>(sun));
@@ -83,7 +83,7 @@ World* create_world_generic2(scene_structure* scene, vec3 p0) {
 World* create_world_generic3(scene_structure* scene, vec3 p0) {
   World* world = new World(scene);
 
-  world->set_skybox(project::path + "assets/skybox.png");
+  world->set_skybox(project::path + "assets/skybox/", ".png");
 
   Sun* sun = new Sun(scene, RGB(147, 27, 28), RGB(220, 53, 69), p0, 40);
   world->add_object(std::unique_ptr<Object>(sun));
@@ -113,6 +113,6 @@ World* create_world_generic3(scene_structure* scene, vec3 p0) {
 
 World* create_world_empty(scene_structure* scene) {
   World* world = new World(scene);
-  world->set_skybox(project::path + "assets/skybox.png");
+  world->set_skybox(project::path + "assets/skybox/", ".png");
   return world;
 }

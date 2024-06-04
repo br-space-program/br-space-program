@@ -108,3 +108,17 @@ void World::set_skybox(const std::string& filepath) {
       image_skybox_grid[1], image_skybox_grid[7], image_skybox_grid[5],
       image_skybox_grid[3], image_skybox_grid[10], image_skybox_grid[4]);
 }
+
+void World::set_skybox(const std::string& prefix, const std::string& suffix) {
+  std::vector<image_structure> image_skybox;
+
+  for (int i = 1; i <= 6; i++) {
+    image_skybox.push_back(
+        image_load_file(prefix + std::to_string(i) + suffix));
+  }
+
+  skybox.initialize_data_on_gpu();
+  skybox.texture.initialize_cubemap_on_gpu(image_skybox[3], image_skybox[2],
+                                           image_skybox[5], image_skybox[4],
+                                           image_skybox[1], image_skybox[0]);
+}
