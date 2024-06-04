@@ -9,6 +9,7 @@ class KeplerianBody : public CelestialBody {
  private:
   CelestialBody* anchor;
   vec3 u0;
+  vec3 normal;
   double theta = 0;
 
  public:
@@ -21,6 +22,7 @@ class KeplerianBody : public CelestialBody {
   virtual void render_debug() override = 0;
   ~KeplerianBody() override = default;
 
-  void set_anchor(CelestialBody& _anchor);
+  void set_anchor(CelestialBody& _anchor, vec3 _normal);
   CelestialBody* get_anchor() const;
+  vec3 get_normal() const;
 };
