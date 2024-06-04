@@ -1,5 +1,6 @@
 #include "KeplerianBody.hpp"
 #include <cgp/cgp.hpp>
+#include "../constants.hpp"
 #include "../mesh/primitives.hpp"
 #include "../utils/uvector.hpp"
 
@@ -17,9 +18,10 @@ KeplerianBody::KeplerianBody(CelestialBody& _anchor,
 
 void KeplerianBody::update() {
   double dt = 1.0 / 60.0;
-  double G = 100;
   double a = cgp::norm(u0);
-  double dTheta = std::sqrt(G * anchor->get_mass() / std::pow(a, 3)) * dt;
+  double dTheta =
+      std::sqrt(GRAVITATIONAL_CONSTANT * anchor->get_mass() / std::pow(a, 3)) *
+      dt;
   theta += dTheta;
 
   mat3 R = mat3::build_rotation_from_axis_angle(normal, theta);
