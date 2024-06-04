@@ -7,20 +7,20 @@
 
 using cgp::mesh_drawable;
 
-class Planet : public KeplerianBody {
+class AnchoredPlanet : public KeplerianBody {
  private:
   scene_structure* scene;
   mesh_drawable sphere;
 
  public:
   SimpleObject* atmosphere;
-  Planet(scene_structure* _scene,
-         CelestialBody& _anchor,
-         vec3 _position,
-         double _radius,
-         vec3 color);
+  AnchoredPlanet(scene_structure* _scene,
+                 CelestialBody& _anchor,
+                 vec3 _position,
+                 double _radius,
+                 vec3 color);
   void update() override;
   void render() override;
   void render_debug() override;
-  ~Planet() override = default;
+  ~AnchoredPlanet() override = default;
 };

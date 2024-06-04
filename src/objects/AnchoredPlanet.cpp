@@ -1,15 +1,15 @@
-#include "Planet.hpp"
+#include "AnchoredPlanet.hpp"
 #include <cgp/cgp.hpp>
 #include "../constants.hpp"
 #include "../mesh/planet.hpp"
 
 using cgp::mesh_drawable;
 
-Planet::Planet(scene_structure* _scene,
-               CelestialBody& _anchor,
-               vec3 _position,
-               double radius,
-               vec3 color)
+AnchoredPlanet::AnchoredPlanet(scene_structure* _scene,
+                               CelestialBody& _anchor,
+                               vec3 _position,
+                               double radius,
+                               vec3 color)
     : KeplerianBody(_scene,
                     _anchor,
                     _position,
@@ -39,17 +39,17 @@ Planet::Planet(scene_structure* _scene,
   atmosphere->set_position(position);
 }
 
-void Planet::update() {
+void AnchoredPlanet::update() {
   KeplerianBody::update();
   sphere.model.translation = position;
   atmosphere->set_position(position);
   atmosphere->update();
 }
 
-void Planet::render() {
+void AnchoredPlanet::render() {
   draw(sphere, scene->environment);
 }
 
-void Planet::render_debug() {
+void AnchoredPlanet::render_debug() {
   draw_wireframe(sphere, scene->environment);
 }

@@ -1,7 +1,7 @@
 #include "scene.hpp"
 #include <algorithm>
+#include "objects/AnchoredPlanet.hpp"
 #include "objects/PerfectSphere.hpp"
-#include "objects/Planet.hpp"
 #include "objects/Sun.hpp"
 #include "objects/Tesseract.hpp"
 #include "objects/space_ship/SpaceShip.hpp"
