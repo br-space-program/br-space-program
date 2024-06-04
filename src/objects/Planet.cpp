@@ -55,9 +55,6 @@ Planet::Planet(scene_structure* _scene,
   sphere.vbo_normal.update(shape.normal);
   sphere.vbo_color.update(shape.color);
 
-  std::cout << "Planet created" << std::endl;
-  std::cout << shape.position.size() << std::endl;
-
   // ==== Atmoshpere ====
   atmosphere = new SimpleObject(scene);
 
