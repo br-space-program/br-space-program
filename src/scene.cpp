@@ -43,7 +43,7 @@ void scene_structure::initialize() {
   worlds[SIDE_POS_Z] = create_world_generic1(this, {-200, 0, 400});
   worlds[SIDE_NEG_Z] = create_world_generic2(this, {0, 0, -800});
   worlds[SIDE_POS_X] = create_world_homeworld_harkonen(this, {-400, 0, 0});
-  worlds[SIDE_NEG_X] = create_world_empty(this);
+  worlds[SIDE_NEG_X] = create_world_generic3(this, {0, 200, 0});
   worlds[SIDE_POS_Y] = create_world_empty(this);
   worlds[SIDE_NEG_Y] = create_world_empty(this);
 
