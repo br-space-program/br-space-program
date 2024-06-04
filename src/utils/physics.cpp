@@ -9,6 +9,10 @@ vec3 compute_gravitional_force(
   for (int i = 0; i < bodies.size(); i++) {
     CelestialBody* body = bodies[i].get();
 
+    if (cgp::norm(body->get_position() - position) < 1e-8) {
+      continue;
+    }
+
     vec3 direction = body->get_position() - position;
     double distance = cgp::norm(direction);
 
