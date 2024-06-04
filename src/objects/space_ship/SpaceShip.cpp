@@ -1,6 +1,7 @@
 #include "SpaceShip.hpp"
 #include <cgp/cgp.hpp>
 #include "../../constants.hpp"
+#include "../utils/physics.hpp"
 
 using cgp::mesh_drawable;
 
@@ -84,8 +85,9 @@ SpaceShip::SpaceShip(scene_structure* _scene) : ObjectWithHitbox(0.5) {
   ship_flames.push_back(std::unique_ptr<SpaceShipFlame>(ship_flame_left_down));
 }
 
+/** Spaceship motion takes into account gravity and collisions */
 vec3 SpaceShip::compute_acceleration() {
-  vec3 acceleration = vec3({0, 0, 0});
+  vec3 acceleration = vec3({0, 0, 0});  // mass = 1
 
   // Easier movements when debugging
   if (scene->debug_movements) {
@@ -99,20 +101,11 @@ vec3 SpaceShip::compute_acceleration() {
 
   // Gravity
   if (!scene->debug_movements) {
-    auto& celestial_bodies = world->get_celestial_bodies();
-
-    for (int i = 0; i < celestial_bodies.size(); i++) {
-      CelestialBody* body = celestial_bodies[i].get();
-
-      vec3 direction = body->get_position() - position;
-      double distance = norm(direction);
-
-      acceleration += GRAVITATIONAL_CONSTANT * direction * body->get_mass() /
-                      pow(distance, 3);
-    }
+    acceleration +=
+        compute_gravitional_force(position, world->get_celestial_bodies());
   }
 
-  // Collision
+  // Collision (surpresses gravitational acceleration if occurs)
   auto& hitboxes = world->get_hitboxes();
 
   for (int i = 0; i < hitboxes.size(); i++) {
@@ -133,13 +126,8 @@ vec3 SpaceShip::compute_acceleration() {
 }
 
 void SpaceShip::update() {
-  // Update the position of the sphere
   double dt = 1.0 / 60.0;
-
   vec3 acceleration = compute_acceleration();
-
-  // Update the speed and position based on gravity, but delete gravity if
-  // collision
   speed += acceleration * dt;
   position += speed * dt;
   rotation_z += speed_rotation_z * dt;
