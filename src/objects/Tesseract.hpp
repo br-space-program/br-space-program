@@ -26,7 +26,6 @@ class Tesseract : public Object {
   scene_structure* scene;
   mesh_drawable box_sides[SIDES_COUNT];
   mesh_drawable box_interfaces[SIDES_COUNT];
-  mesh_drawable sphere;
   hierarchy_mesh_drawable box_frame;
   vec3 position;  // center of the tesseract
   double scale;

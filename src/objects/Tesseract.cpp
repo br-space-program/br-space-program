@@ -60,16 +60,10 @@ Tesseract::Tesseract(scene_structure* _scene,
     worlds[i] = _worlds[i];
   }
 
-  mesh sphere_mesh = mesh_primitive_sphere(0.1f, {0.5f, 0, 0});
-  sphere.initialize_data_on_gpu(sphere_mesh);
-  sphere.material.color = {1.0f, 1.0f, 0};
-  sphere.model.scaling = scale;
-
   initialize_box_sides();
   initialize_box_interfaces();
   initialize_box_frame();
 
-  sphere.shader = scene->shader_custom;
   for (int i = 0; i < SIDES_COUNT; i++) {
     box_sides[i].shader = scene->shader_custom;
   }
@@ -209,7 +203,6 @@ void Tesseract::update() {
         (0.5f - frame_thickness) * scale * get_side_normal(current_world);
   }
 
-  sphere.model.translation = position;
   box_frame["root"].transform_local.translation = position;
   box_frame.update_local_to_global_coordinates();
 
@@ -266,9 +259,7 @@ void Tesseract::draw_world_through_interface(tesseract_side side) {
   draw(box_interfaces[side], scene->environment);  // any draw() operation
 }
 
-void Tesseract::draw_tesseract_content() {
-  draw(sphere, scene->environment);
-}
+void Tesseract::draw_tesseract_content() {}
 
 void Tesseract::render_inside_tesseract() {
   scene->environment.uniform_generic.uniform_vec3["light"] = position;
@@ -436,7 +427,6 @@ void Tesseract::render_debug() {
   for (int i = 0; i < SIDES_COUNT; i++) {
     draw_wireframe(box_interfaces[i], scene->environment);
   }
-  draw_wireframe(sphere, scene->environment);
 }
 
 World* Tesseract::get_active_world() {
