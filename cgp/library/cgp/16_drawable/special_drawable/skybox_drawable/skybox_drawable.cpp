@@ -67,7 +67,7 @@ namespace cgp {
 		// Check if this skybox_drawable is already initialized
 		if (vao != 0 || vbo_position.size != 0) {
 			std::cout << "Skybox already initialized" << std::endl;
-			abort();
+			// abort();
 		}
 
 		model = affine();
