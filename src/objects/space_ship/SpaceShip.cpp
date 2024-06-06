@@ -147,6 +147,8 @@ void SpaceShip::update() {
         position + 0.2 * vec3({-sin(rotation_z), cos(rotation_z), 0});
   }
 
+  scene->camera_control.update(scene->environment.camera_view);
+
   for (auto& ship_flame : ship_flames) {
     ship_flame->update();
   }
